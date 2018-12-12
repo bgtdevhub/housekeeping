@@ -34,6 +34,11 @@ function generateToken(username, password) {
 }
 
 function getUserInfo(username) {
+  const session = new UserSession({
+    username: username,
+    token: getToken(),
+    clientId: localhostClientId
+  });
   let url = `${apiUrl}/community/users/${username}`;
   let parameters = {
       token: getToken(),
