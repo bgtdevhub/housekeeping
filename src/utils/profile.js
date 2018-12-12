@@ -11,31 +11,43 @@ const filters = {
       MB: convertToMb
     };
 
-    return dataItems.filter(item => {
-      return funcs[selector.format](item.size) > selector.value;
-    });
+    if (selector.value > 0) {
+      return dataItems.filter(item => {
+        return funcs[selector.format](item.size) > selector.value;
+      });
+    }
+
+    return dataItems;
   },
   date: (dataItems, selector) => {
-    return dataItems.filter(item => {
-      const funcs = {
-        day: getDaysBetween
-      };
-      const modifiedDate = convertToDate(item.modified);
-      const createdDate = convertToDate(item.created);
-      return funcs[selector.format](createdDate, modifiedDate) > selector.value;
-    });
+    if (selector.value > 0) {
+      return dataItems.filter(item => {
+        const funcs = {
+          day: getDaysBetween
+        };
+        const modifiedDate = convertToDate(item.modified);
+        const createdDate = convertToDate(item.created);
+        return funcs[selector.format](createdDate, modifiedDate) > selector.value;
+      });
+    }
+
+    return dataItems;
   },
   type: (dataItems, selector) => {
-    return dataItems.filter(item => {
-      return item.type == selector.value
-    });
+    if (selector.value !== 'all') {
+      return dataItems.filter(item => {
+        return item.type == selector.value
+      });
+    }
+
+    return dataItems;
   },
   refresh: () => {
     return 'refresh';
   }
 };
 
-export function getDaysBetween( date1, date2 ) {
+function getDaysBetween( date1, date2 ) {
     //Get 1 day in milliseconds
     var one_day=1000*60*60*24;
 
@@ -50,15 +62,15 @@ export function getDaysBetween( date1, date2 ) {
     return Math.round(difference_ms/one_day);
 }
 
-export function convertToMb(value) {
+function convertToMb(value) {
   return Math.round((value/1e+6));
 }
 
-export function convertToGb(value) {
+function convertToGb(value) {
   return Math.round((value/1e+9));
 }
 
-export function convertToDate(value) {
+function convertToDate(value) {
   if (typeof value !== 'number') return 'Invalid Date';
   return new Date(value);
 }
@@ -145,6 +157,7 @@ export function getFilterData(key, items) {
         label: 'Items larger than:',
         type: 'size',
         items: [
+          { label: 'Please select...', value: 0, format: 'MB', type: 'size' },
           { label: '1 MB', value: 1, format: 'MB', type: 'size' },
           { label: '10 MB', value: 10, format: 'MB', type: 'size' },
           { label: '100 MB', value: 100, format: 'MB', type: 'size' },
@@ -157,12 +170,14 @@ export function getFilterData(key, items) {
         label: 'Last Modified:',
         type: 'date',
         items: [
+          { label: 'Please select...', value: 0, format: 'day', type: 'date' },
           { label: 'Over 60 days', value: 60, format: 'day', type: 'date' },
           { label: 'Over 1 day', value: 1, format: 'day', type: 'date' },
         ]
       }
     },
     filterType: () => {
+      items.unshift({ label: 'Please select...', value: 'all' });
       return {
         label: 'Following Item Types:',
         type: 'type',
@@ -177,7 +192,6 @@ export function getFilterData(key, items) {
 }
 
 export function filterItems(config) {
-  // debugger;
   const {
     items,
     unchangedContentItems,

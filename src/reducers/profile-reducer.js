@@ -112,21 +112,24 @@ const profileReducer = (state = {}, action) => {
       return {
         ...state,
         filterBySize: true,
-        selectedSize: action.selectedSize
+        selectedSize: action.selectedSize,
+        chart: action.chart
       }
 
     case FILTER_BY_DATE_DONE:
       return {
         ...state,
         filterByDate: true,
-        selectedDate: action.selectedDate
+        selectedDate: action.selectedDate,
+        chart: action.chart
       }
 
     case FILTER_BY_TYPE_DONE:
       return {
         ...state,
         filterByType: true,
-        selectedType: action.selectedType
+        selectedType: action.selectedType,
+        chart: action.chart
       }
 
     default:

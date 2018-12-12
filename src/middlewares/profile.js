@@ -56,6 +56,7 @@ export const profileUser = store => {
                 });
                 content.items = allItems;
                 const chart = getTreemapData(content);
+                console.log('perspective',chart);
                 store.dispatch({
                   type: GET_USER_CONTENT,
                   content: content,
@@ -143,7 +144,12 @@ export const profileFilter = store => {
         next(action);
         const {
           content,
-          unchangedContent
+          unchangedContent,
+          mode,
+          chart,
+          filterBySize, selectedSize,
+          filterByDate, selectedDate,
+          filterByType, selectedType,
         } = store.getState().profileReducer;
 
         switch (action.type) {
@@ -154,21 +160,27 @@ export const profileFilter = store => {
               unchangedContentItems: unchangedContent.items,
               filterBySize: true,
               selectedSize: action.selectedSize,
-              filterByDate: store.getState().profileReducer.filterByDate,
-              selectedDate: store.getState().profileReducer.selectedDate,
-              filterByType: store.getState().profileReducer.filterByType,
-              selectedType: store.getState().profileReducer.selectedType,
+              filterByDate,
+              selectedDate,
+              filterByType,
+              selectedType,
             });
-
-            store.dispatch({
+            const newContent = Object.assign(content, {
+              items: filteredItemsDataForSize
+            });
+            let dispatchDataSize = {
               type: FILTER_BY_SIZE_DONE,
-              content: Object.assign(content, {
-                items: filteredItemsDataForSize
-              }),
-              mode: 'table',
-              selectedSize: action.selectedSize
-            });
+              content: newContent,
+              mode: mode,
+              selectedSize: action.selectedSize,
+              chart
+            };
 
+            if (mode === 'chart') {
+              dispatchDataSize['chart'] = getTreemapData(newContent);
+            }
+
+            store.dispatch(dispatchDataSize);
             break;
 
           case FILTER_BY_DATE:
@@ -177,20 +189,27 @@ export const profileFilter = store => {
               unchangedContentItems: unchangedContent.items,
               filterByDate: true,
               selectedDate: action.selectedDate,
-              filterByType: store.getState().profileReducer.filterByType,
-              selectedType: store.getState().profileReducer.selectedType,
-              filterBySize: store.getState().profileReducer.filterBySize,
-              selectedSize: store.getState().profileReducer.selectedSize,
+              filterByType,
+              selectedType,
+              filterBySize,
+              selectedSize,
             });
-
-            store.dispatch({
+            const newContentDate = Object.assign(content, {
+              items: filteredItemsDataForDate
+            });
+            let dispatchDataDate = {
               type: FILTER_BY_DATE_DONE,
-              content: Object.assign(content, {
-                items: filteredItemsDataForDate
-              }),
-              mode: 'table',
+              content: newContentDate,
+              mode: mode,
               selectedDate: action.selectedDate,
-            });
+              chart
+            };
+
+            if (mode === 'chart') {
+              dispatchDataDate['chart'] = getTreemapData(newContentDate);
+            }
+
+            store.dispatch(dispatchDataDate);
 
             break;
 
@@ -200,22 +219,30 @@ export const profileFilter = store => {
               unchangedContentItems: unchangedContent.items,
               filterByType: true,
               selectedType: action.selectedType,
-              filterBySize: store.getState().profileReducer.filterBySize,
-              selectedSize: store.getState().profileReducer.selectedSize,
-              filterByDate: store.getState().profileReducer.filterByDate,
-              selectedDate: store.getState().profileReducer.selectedDate,
+              filterBySize,
+              selectedSize,
+              filterByDate,
+              selectedDate,
             });
-
-            store.dispatch({
+            const newContentType = Object.assign(content, {
+              items: filteredItemsDataForType
+            });
+            let dispatchDataType = {
               type: FILTER_BY_TYPE_DONE,
-              content: Object.assign(content, {
-                items: filteredItemsDataForType
-              }),
-              mode: 'table',
+              content: newContentType,
+              mode: mode,
               selectedType: action.selectedType,
-            });
+              chart
+            };
+
+            if (mode === 'chart') {
+              dispatchDataType['chart'] = getTreemapData(newContentType);
+            }
+
+            store.dispatch(dispatchDataType);
 
             break;
+
           default:
 
         }

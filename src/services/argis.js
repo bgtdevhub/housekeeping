@@ -85,12 +85,12 @@ function getUserItemsByFolderName(username, folder) {
     return request.get(url, parameters, options);
 }
 
-function beginOAuth2() {
+function beginOAuth2(configData) {
   const userSession = UserSession;
   if (userSession) {
    userSession.beginOAuth2({
-     clientId: config.local.id,
-     redirectUri: config.local.redirectUri,
+     clientId: configData.id,
+     redirectUri: `${configData.redirectUri}?clientID=${configData.id}`,
      popup: false,
    });
   }

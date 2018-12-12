@@ -24,7 +24,8 @@ class PopupDetail extends React.Component {
 
   handleMoreDetailClick(data) {
     if (data.url) {
-      window.open(data.url, '_blank');
+      // window.open(`http://www.arcgis.com/home/webmap/viewer.html?url=${data.url}`, '_blank');
+      window.open(`https://${data.owner}.maps.arcgis.com/home/item.html?id=${data.id}`, '_blank');
     }
   }
 

@@ -12,7 +12,6 @@ import TableHeader from './TableHeader/TableHeader';
 import PopupDetail from '../PopupDetail/PopupDetail';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
-import { getDaysBetween, convertToDate } from '../../../utils/profile';
 
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -140,16 +139,6 @@ class ItemsList extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  getDays(created, modified) {
-    const day = getDaysBetween(convertToDate(created), convertToDate(modified));
-    if (day > 0) {
-      return `${day} days`;
-    } else if (day === 1) {
-      return `${day} day`;
-    }
-    return 0;
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
       this.setState({data:this.props.data})
@@ -173,6 +162,9 @@ class ItemsList extends React.Component {
     const { data, order, orderBy, selected, rowsPerPage, page, anchorEl, hoverDataCell } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const open = Boolean(anchorEl);
+
+    console.log('data', this);
+
     return (
       <Paper className={classes.root} onMouseLeave={(event) => this.handlePopoverClose(event)}>
         <PopupDetail data={hoverDataCell} config={{anchorEl:anchorEl, open:open}} callbacks={{close:this.handlePopoverClose.bind(this)}} />
@@ -218,10 +210,10 @@ class ItemsList extends React.Component {
                          aria-haspopup="true"
                          onMouseOver={(event) => this.handlePopoverOpen(event, n)}
                         >
-                         {n.title} {n.type}
+                         {n.title}
                         </Typography>
                       </TableCell>
-                      <TableCell numeric>{this.getDays(n.created,n.modified)}</TableCell>
+                      <TableCell numeric>{n.modified}</TableCell>
                       <TableCell numeric>{Math.round((n.size/1e+6))} MB</TableCell>
                       <TableCell numeric>{n.numViews}</TableCell>
                     </TableRow>

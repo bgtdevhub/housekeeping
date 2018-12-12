@@ -25,7 +25,7 @@ class ItemsLegend extends Component {
                   className="btn btn-small"
                   style={{backgroundColor: item.typeColor, border: '2px solid #595959'}}>
                   {item.name}
-                </button>
+                </button> {item.totalSize}
               </li>
           }
         )}

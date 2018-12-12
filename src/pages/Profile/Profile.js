@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import profileStyles from './Profile.css';
 import * as calcite from 'calcite-web';
+import { Container, Row, Col } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import { Chart, Doughnut } from 'react-chartjs-2';
@@ -61,8 +62,8 @@ class Profile extends Component {
       { id: 'size', numeric: true, disablePadding: false, label: 'File Size' },
       { id: 'numViews', numeric: true, disablePadding: false, label: 'Views' },
     ],
-    order: 'asc',
-    orderBy: 'title',
+    order: 'desc',
+    orderBy: 'size',
     selected: [],
     page: 0,
     rowsPerPage: 10,
@@ -89,17 +90,18 @@ class Profile extends Component {
         itemsSetData: [0, 0]
       });
 
-      if (triggerFor === 'add') {
-        this.displayReviewSelection();
-      }
+      // if (triggerFor === 'add') {
+      //   this.displayReviewSelection();
+      // }
     }, 0)
   };
 
-  updateChartState() {
+  updateChartState(data) {
+    if (data === undefined) data = this.state.chart;
     this.setState({
       mainComponent: {
         component: 'chart',
-        data: this.state.chart
+        data: data
       }
     });
   }
@@ -298,44 +300,42 @@ class Profile extends Component {
         return (
             <div className='profile'>
               <DHLayout className={classes.root}>
-                <div className="grid-container">
-                	<div className="column-12">
-                    <div className="column-2">
-                      <div className="column-2 leader-1">
-                        {/*start of card*/}
-                        <div className="card card-shaped block trailer-1">
-                           <figure className="card-image-wrap">
-                             <img src={thumbnail} alt={info.fullName} className="card-image" style={{borderRadius: '50%'}} />
-                           </figure>
-                           <div className="card-content">
-                             <p style={{textAlign: 'center'}}>
-                               <b>{info.fullName}</b>
-                             </p>
-                             <p className="font-size--1 card-last" style={{textAlign: 'center'}}>
-                               Estimated <b>{getNodesInfo(content.items).estimatedCredit}</b> credits/month
-                             </p>
-                             <nav className="leader-1">
-                               <mark className="label label-blue" style={{marginRight: '5px'}}><b>{content.total} items</b></mark>
-                               <mark className="label label-yellow"><b>{Math.round(info.storageUsage/1e+9)} GB</b></mark>
-                            </nav>
-                          </div>
+                <Container fluid style={{ lineHeight: '32px' }}>
+                  <Row>
+                    <Col xl={2}>
+                      {/*start of card*/}
+                      <div className="card card-shaped block trailer-1">
+                         <figure className="card-image-wrap">
+                           <img src={thumbnail} alt={info.fullName} className="card-image" style={{borderRadius: '50%'}} />
+                         </figure>
+                         <div className="card-content">
+                           <p style={{textAlign: 'center'}}>
+                             <b>{info.fullName}</b>
+                           </p>
+                           <p className="font-size--1 card-last" style={{textAlign: 'center'}}>
+                             Estimated <b>{getNodesInfo(content.items).estimatedCredit}</b> credits/month
+                           </p>
+                           <nav className="leader-1">
+                             <mark className="label label-blue" style={{marginRight: '5px'}}><b>{content.total} items</b></mark>
+                             <mark className="label label-yellow"><b>{Math.round(info.storageUsage/1e+9)} GB</b></mark>
+                          </nav>
                         </div>
-                        {/*end of card*/}
-                        {/*start of filter*/}
-                        {!isReviewing ?
-                          <Fragment>
-                            <Filter data={getFilterData('filterSize')} callbacks={{onChange: this.handleFilter.bind(this)}}></Filter>
-                            <Filter data={getFilterData('filterDate')} callbacks={{onChange: this.handleFilter.bind(this)}}></Filter>
-                            <Filter
-                              data={getFilterData('filterType', getTypes(itemsForTypes))}
-                              callbacks={{onChange: this.handleFilter.bind(this)}}>
-                            </Filter>
-                          </Fragment> :
-                        <Fragment />}
-                        {/*end of filter*/}
                       </div>
-                  	</div>
-                    <div className="column-8">
+                      {/*end of card*/}
+                      {/*start of filter*/}
+                      {!isReviewing ?
+                        <Fragment>
+                          <Filter data={getFilterData('filterSize')} callbacks={{onChange: this.handleFilter.bind(this)}}></Filter>
+                          <Filter data={getFilterData('filterDate')} callbacks={{onChange: this.handleFilter.bind(this)}}></Filter>
+                          <Filter
+                            data={getFilterData('filterType', getTypes(itemsForTypes))}
+                            callbacks={{onChange: this.handleFilter.bind(this)}}>
+                          </Filter>
+                        </Fragment> :
+                      <Fragment />}
+                      {/*end of filter*/}
+                    </Col>
+                    <Col xl={8}>
                       <MainComponent
                         className={classes.mainComponentContainer}
                         component={mainComponent.component}
@@ -343,8 +343,8 @@ class Profile extends Component {
                         config={mainComponentSpecs.config}
                         callbacks={mainComponentSpecs.callbacks}>
                       </MainComponent>
-                  	</div>
-                    <div className="column-2">
+                    </Col>
+                    <Col xl={2}>
                       <nav className="leader-1">
                         <button aria-label="View your items in tabular" className={(mode === 'table') ? 'btn tooltip' : 'btn btn-clear tooltip'} style={{marginRight: '10px'}} onClick={this.displayTable.bind(this)}>
                           <Icon>view_list</Icon>
@@ -366,9 +366,10 @@ class Profile extends Component {
                       <br />
                       <button onClick={this.displayReviewSelection.bind(this)} className="btn btn-large btn-green" style={{marginRight: '5px'}}>Review</button>
                       <button onClick={this.handleFirstTryDelete.bind(this)} className={(nodes.length === 0) ? 'btn btn-large btn-red btn-disabled' : 'btn btn-large btn-red'}>Delete All</button>
-                  	</div>
-                	</div>
-                </div>
+                    </Col>
+                  </Row>
+                </Container>
+
               </DHLayout>
               {/*start of modal*/}
               <FirstTryModal
