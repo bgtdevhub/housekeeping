@@ -290,12 +290,16 @@ class Profile extends Component {
         const itemsInfo = getNodesInfo(content.items);
         const nodesInfo = getNodesInfo(nodes);
         const mainComponentSpecs = this.getMainComponentSpecs(mainComponent);
-        const totalEstimatedCredit = (nodesInfo.estimatedCredit - itemsInfo.estimatedCredit);
-        const totalEstimatedSize = (nodesInfo.size - itemsInfo.size);
-        const totalEstimatedItems = (nodesInfo.total - itemsInfo.total);
-        const creditDonutData = getDonutChartData({data:[nodesInfo.estimatedCredit, totalEstimatedCredit], total: nodesInfo.estimatedCredit, text: 'Credits'});
-        const sizeDonutData = getDonutChartData({data:[nodesInfo.size, totalEstimatedSize], total: nodesInfo.size, text: 'MB'});
-        const itemsDonutData = getDonutChartData({data:[nodesInfo.total, totalEstimatedItems], total: nodesInfo.total, text: 'Items'});
+        const totalEstimatedCredit = (itemsInfo.estimatedCredit - nodesInfo.estimatedCredit);
+        const totalEstimatedSize = (itemsInfo.size - nodesInfo.size);
+        const totalEstimatedItems = (itemsInfo.total - nodesInfo.total);
+        /*
+        * if total of donut data equal to 0, just for nice displaying, we changed the total to 1
+        * By doing this the chart still show the circle
+        */
+        const creditDonutData = getDonutChartData({data:[nodesInfo.estimatedCredit, (totalEstimatedCredit === 0) ? 1 : totalEstimatedCredit], total: nodesInfo.estimatedCredit, text: 'Credits'});
+        const sizeDonutData = getDonutChartData({data:[nodesInfo.size, (totalEstimatedSize === 0) ? 1 : totalEstimatedSize], total: nodesInfo.size, text: 'MB'});
+        const itemsDonutData = getDonutChartData({data:[nodesInfo.total, (totalEstimatedItems === 0) ? 1 : totalEstimatedItems], total: nodesInfo.total, text: 'Items'});
         console.log('creditDonutData',creditDonutData);
         console.log('sizeDonutData',sizeDonutData);
         return (
