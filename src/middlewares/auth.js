@@ -1,6 +1,7 @@
 import { AUTH_SUCCESS, AUTH_START } from '../constants/actions';
 import { refreshAuth, getAuth } from '../utils/auth';
 import argisApi from '../services/argis';
+import config from 'react-global-configuration';
 
 const auth = store => {
 
@@ -9,7 +10,7 @@ const auth = store => {
 
         switch (action.type) {
           case AUTH_START:
-              argisApi.beginOAuth2();
+              argisApi.beginOAuth2({id: config.get('id'), redirectUri: config.get('redirectUri')});
             break;
 
             case AUTH_SUCCESS:

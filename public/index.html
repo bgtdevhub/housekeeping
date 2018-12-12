@@ -24,6 +24,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="./assets/styles/react-vis.css">
     <title>React App</title>
+    <script>
+      var promise = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "%PUBLIC_URL%/config.json");
+        xhr.onload = () => resolve(xhr.responseText);
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send();
+      });
+      window.configPromise = promise;
+    </script>
   </head>
   <body>
     <noscript>

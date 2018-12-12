@@ -45,6 +45,17 @@ class DHTreemap extends React.Component {
     );
   };
 
+  handleLabelDisplay(node, event) {
+    console.log('noe', node)
+    // return `${Math.round((node.value/1e+6))} MB`;
+    return `${node.value} MB`;
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log('prev', prevProps.data);
+    console.log('curr', this.props.data);
+  }
+
   componentDidMount() {
     const { data } = this.props;
     this.setState({chartData: data});
@@ -59,7 +70,7 @@ class DHTreemap extends React.Component {
           root={chartData}
           tooltip={this.handleHovering}
           onClick={this.handleClick}
-          enableLabel={false}
+          enableLabel={true}
           identity="name"
           value="loc"
           innerPadding={3}
@@ -70,7 +81,7 @@ class DHTreemap extends React.Component {
             "bottom": 10,
             "left": 10
           }}
-          label="loc"
+          label={this.handleLabelDisplay}
           colorBy={this.handleColorBy}
           animate={true}
           motionStiffness={90}

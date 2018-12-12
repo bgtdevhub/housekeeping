@@ -61,8 +61,8 @@ class Profile extends Component {
       { id: 'size', numeric: true, disablePadding: false, label: 'File Size' },
       { id: 'numViews', numeric: true, disablePadding: false, label: 'Views' },
     ],
-    order: 'asc',
-    orderBy: 'title',
+    order: 'desc',
+    orderBy: 'size',
     selected: [],
     page: 0,
     rowsPerPage: 10,
@@ -89,17 +89,18 @@ class Profile extends Component {
         itemsSetData: [0, 0]
       });
 
-      if (triggerFor === 'add') {
-        this.displayReviewSelection();
-      }
+      // if (triggerFor === 'add') {
+      //   this.displayReviewSelection();
+      // }
     }, 0)
   };
 
-  updateChartState() {
+  updateChartState(data) {
+    if (data === undefined) data = this.state.chart;
     this.setState({
       mainComponent: {
         component: 'chart',
-        data: this.state.chart
+        data: data
       }
     });
   }
