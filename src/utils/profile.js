@@ -2,6 +2,7 @@ import Ydnlu from './ydnlu';
 
 const reducer = (accumulatorNodeSize, currentNodeSize) => {
   return accumulatorNodeSize + currentNodeSize;
+
 };
 
 const filters = {
@@ -62,15 +63,19 @@ function getDaysBetween( date1, date2 ) {
     return Math.round(difference_ms/one_day);
 }
 
-function convertToMb(value) {
+export function convertToMb(value) {
   return Math.round((value/1e+6));
 }
 
-function convertToGb(value) {
+export function convertToGb(value) {
   return Math.round((value/1e+9));
 }
 
-function convertToDate(value) {
+export function convertMbToB(value) {
+  return Math.round((value*1e+6));
+}
+
+export function convertToDate(value) {
   if (typeof value !== 'number') return 'Invalid Date';
   return new Date(value);
 }

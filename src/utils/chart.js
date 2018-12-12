@@ -1,6 +1,7 @@
 import Ydnlu from './ydnlu';
 import { types } from '../constants/items';
 import typeColors from '../constants/typeColors';
+import { convertToGb, convertMbToB, convertToMb } from '../utils/profile';
 
 const getTotalSize = (data) => {
   if (!Ydnlu.isEmpty(data)) {
@@ -9,7 +10,19 @@ const getTotalSize = (data) => {
   }
 };
 
-//todo: https://github.com/davidmerfield/randomColor
+const getTotalSizeDisplay = (data) => {
+  if (!Ydnlu.isEmpty(data)) {
+    let sizes = data.map(item => item.value);
+    const totalSize = sizes.reduce((acc, curr) => acc+curr);
+    if (totalSize > 500) {
+      return `${convertToGb(convertMbToB(totalSize))} GB`;
+    }
+
+    return `${totalSize} MB`;
+  }
+};
+
+//todo: unused this
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -19,19 +32,35 @@ function getRandomColor() {
   return color;
 }
 
+export function getContrastCalciteColorByIndex(index) {
+  const colors = {
+    '0': '#de2900',
+    '1': '#338033',
+    '2': '#e4d154',
+    '3': '#0079c1',
+    '4': '#e8912e'
+  };
+
+  if (!colors[index]) {
+    return '#595959';
+  }
+
+  return colors[`${index}`];
+}
+
 export function getTreemapData(data) {
   let _types = Ydnlu.pickByProp(data.items, 'type');
 
   let items = {};
   let treemapData = [];
+  let colorsMapWithParentNode = {};
 
   _types.forEach(type => {
     // const color = typeColors[type];
     items[type] = {
       name: type,
       children: [],
-      color: '#595959',
-      childColor: typeColors[type] || '#595959'
+      color: '#595959'
     };
   });
 
@@ -41,9 +70,10 @@ export function getTreemapData(data) {
         items[item.type].children.push({
           name: item.id,
           title: item.title,
-          color: items[item.type].childColor,
-          value: Math.round((item.size/1e+6)),
-          loc: Math.round((item.size/1e+6)),
+          color: 'white',
+          size: item.size,
+          value: Math.round(convertToMb(item.size)),
+          loc: Math.round(convertToMb(item.size)),
           esriId: item.id, //can't use id as nivo-chart override it
           thumbnail: item.thumbnail,
           snippet: item.snippet,
@@ -54,21 +84,29 @@ export function getTreemapData(data) {
     }
   });
 
-  Object.keys(items).forEach(key => {
+  Object.keys(items).forEach((key, idx) => {
     const totalSize = getTotalSize(items[key].children);
+    const totalSizeDisplay = getTotalSizeDisplay(items[key].children);
     if (totalSize > 0) {
       treemapData.push({
         name: key,
-        color: items[key].color,
-        typeColor: items[key].childColor,
+        color: '#fff',
         children: items[key].children,
-        totalSize: totalSize
+        totalSize,
+        totalSizeDisplay
       })
     }
   });
 
+  treemapData = treemapData.sort((a,b) => b.totalSize - a.totalSize);
+  treemapData.forEach((data, idx) => {
+    data.color = getContrastCalciteColorByIndex(idx);
+    colorsMapWithParentNode[data.name] = data.color;
+  });
+
   return  {
     name: `${data.username} chart`,
+    colors: colorsMapWithParentNode,
     color: '#a9a9a9',
     children: [
       {

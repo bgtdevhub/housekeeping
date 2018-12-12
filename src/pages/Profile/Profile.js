@@ -214,7 +214,7 @@ class Profile extends Component {
       const callbacks = Object.assign(mainComponent.callbacks, {removeItem: this.removeItem.bind(this)});
       return { data, config, callbacks };
     } else {
-      return mainComponent;
+      return Object.assign(mainComponent, { config: { nodes: nodes } });
     }
   };
 
@@ -296,7 +296,8 @@ class Profile extends Component {
         const creditDonutData = getDonutChartData({data:[nodesInfo.estimatedCredit, totalEstimatedCredit], total: nodesInfo.estimatedCredit, text: 'Credits'});
         const sizeDonutData = getDonutChartData({data:[nodesInfo.size, totalEstimatedSize], total: nodesInfo.size, text: 'MB'});
         const itemsDonutData = getDonutChartData({data:[nodesInfo.total, totalEstimatedItems], total: nodesInfo.total, text: 'Items'});
-
+        console.log('creditDonutData',creditDonutData);
+        console.log('sizeDonutData',sizeDonutData);
         return (
             <div className='profile'>
               <DHLayout className={classes.root}>

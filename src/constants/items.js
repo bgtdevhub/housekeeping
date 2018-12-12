@@ -26,7 +26,7 @@ export const types = [
   },
   {
     "type": "Feature Collection",
-    "icon": "features",
+    "icon": "Features",
     "color": "hsl(135, 70%, 50%)"
   },
   {
@@ -36,12 +36,12 @@ export const types = [
   },
   {
     "type": "Feature Layer",
-    "icon": "features",
+    "icon": "Features",
     "color": "hsl(43, 70%, 50%)"
   },
   {
     "type": "Feature Service",
-    "icon": "features",
+    "icon": "Features",
     "color": "hsl(77, 70%, 50%)"
   },
   {
