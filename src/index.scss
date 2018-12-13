@@ -52,12 +52,17 @@ html {
   margin: 0 -15px;
 }
 
-.app-block + .app-block {
-  margin-left: 40px;
+.app-left {
+  width: 220px;
+}
+
+.app-right {
+  width: 150px;
 }
 
 .app-center {
   flex: 1;
+  margin: 0 40px;
 }
 
 .btn {

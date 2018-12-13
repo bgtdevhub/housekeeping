@@ -82,7 +82,6 @@ class Profile extends Component {
   };
 
   removeItem(node, triggerFor) {
-    console.log('​Profile -> removeItem -> node, triggerFor', node, triggerFor);
     this.props.addRemoveButtonToggle(node, triggerFor);
     setTimeout(() => {
       this.setState({
@@ -334,14 +333,13 @@ class Profile extends Component {
         total: nodesInfo.total,
         text: 'Items'
       });
-      console.log('creditDonutData', creditDonutData);
-      console.log('sizeDonutData', sizeDonutData);
+
       return (
         <div className='profile'>
           <DHLayout className={classes.root}>
             <Container fluid className='app-body'>
               <div className='app-container'>
-                <div className='app-block app-left'>
+                <div className='app-left'>
                   {/*start of card*/}
                   <div className='profile-card card card-shaped'>
                     <figure className='card-image-wrap'>
@@ -401,7 +399,7 @@ class Profile extends Component {
                   )}
                   {/*end of filter*/}
                 </div>
-                <div className='app-block app-center'>
+                <div className='app-center'>
                   <MainComponent
                     className={classes.mainComponentContainer}
                     component={mainComponent.component}
@@ -410,7 +408,7 @@ class Profile extends Component {
                     callbacks={mainComponentSpecs.callbacks}
                   />
                 </div>
-                <div className='app-block app-right'>
+                <div className='app-right'>
                   <nav className='toggle-list'>
                     <button
                       aria-label='View your items in tabular'
