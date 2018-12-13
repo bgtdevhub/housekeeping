@@ -18,7 +18,7 @@ class App extends Component {
       <div className={styles.app}>
         <DHLayout>
           <div className='login'>
-            <div className='card card-bar-blue block trailer-1'>
+            <div className='card card-bar-blue block'>
               <div className='card-content'>
                 <p className='app-logo'>Housekeeping</p>
                 <p className='font-size--1 card-last'>

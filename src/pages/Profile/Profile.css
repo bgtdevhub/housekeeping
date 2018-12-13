@@ -3,6 +3,10 @@
   justify-content: center;
 }
 
+.toggle-list .btn {
+  flex: 1;
+}
+
 .toggle-list .btn + .btn {
   margin-left: 10px;
 }
@@ -16,10 +20,6 @@
   margin: auto;
 }
 
-.profile-card {
-  margin-bottom: 20px;
-}
-
 .doughnut-list {
   margin-top: 40px;
 }
@@ -28,6 +28,62 @@
   margin-top: 20px;
 }
 
+.profile-card {
+  margin-bottom: 20px;
+}
+
+.profile-card .card-content p {
+  margin: 0;
+}
+
+.profile-card .card-content p + p {
+  margin-top: 10px;
+}
+
+.profile-card .card-image-wrap {
+  height: 175px;
+}
+
+.card-image {
+  border-radius: 50%;
+  box-shadow: 2px 4px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.info-item {
+  width: 48px;
+  text-align: center;
+}
+
+.info-value {
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #efefef;
+  border-bottom: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.info-unit {
+  height: 20px;
+  line-height: 20px;
+  padding: 0 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  background: #0079c1;
+  color: #fff;
+}
+
 .control-list {
   margin-top: 40px;
+}
+
+.control-list .btn + .btn {
+  margin-top: 10px;
 }

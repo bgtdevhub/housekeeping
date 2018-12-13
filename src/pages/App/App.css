@@ -5,6 +5,7 @@
 
 .login .card {
   margin: auto;
+  transform: translateY(-48px);
 }
 
 .login-btn + .login-btn {

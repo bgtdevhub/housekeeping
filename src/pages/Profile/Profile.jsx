@@ -27,7 +27,6 @@ import MainComponent from './MainComponent/MainComponent';
 import DHLayout from '../../components/Layout/Layout';
 import { FirstTryModal, SecondTryModal } from './Modals/Modals';
 import Loader from './Loader/Loader';
-import ItemsLegend from './ItemsLegend/ItemsLegend';
 import Filter from './Filter/Filter';
 
 const styles = theme => ({
@@ -83,6 +82,7 @@ class Profile extends Component {
   };
 
   removeItem(node, triggerFor) {
+    console.log('​Profile -> removeItem -> node, triggerFor', node, triggerFor);
     this.props.addRemoveButtonToggle(node, triggerFor);
     setTimeout(() => {
       this.setState({
@@ -90,10 +90,6 @@ class Profile extends Component {
         sizeSetData: [0, 0],
         itemsSetData: [0, 0]
       });
-
-      // if (triggerFor === 'add') {
-      //   this.displayReviewSelection();
-      // }
     }, 0);
   }
 
@@ -347,38 +343,37 @@ class Profile extends Component {
               <div className='app-container'>
                 <div className='app-block app-left'>
                   {/*start of card*/}
-                  <div className='card card-shaped block trailer-1'>
+                  <div className='profile-card card card-shaped'>
                     <figure className='card-image-wrap'>
                       <img
                         src={thumbnail}
                         alt={info.fullName}
                         className='card-image'
-                        style={{ borderRadius: '50%' }}
                       />
                     </figure>
                     <div className='card-content'>
-                      <p style={{ textAlign: 'center' }}>
+                      <p>
                         <b>{info.fullName}</b>
                       </p>
-                      <p
-                        className='font-size--1 card-last'
-                        style={{ textAlign: 'center' }}
-                      >
+                      <p className='font-size--1 card-last'>
                         Estimated{' '}
                         <b>{getNodesInfo(content.items).estimatedCredit}</b>{' '}
                         credits/month
                       </p>
-                      <nav className='leader-1'>
-                        <mark
-                          className='label label-blue'
-                          style={{ marginRight: '5px' }}
-                        >
-                          <b>{content.total} items</b>
-                        </mark>
-                        <mark className='label label-yellow'>
-                          <b>{Math.round(info.storageUsage / 1e9)} GB</b>
-                        </mark>
-                      </nav>
+                      <div className='info'>
+                        <div className='info-item'>
+                          <div className='info-value'>{content.total}</div>
+                          <div className='info-unit'>
+                            item{content.total > 1 ? 's' : ''}
+                          </div>
+                        </div>
+                        <div className='info-item'>
+                          <div className='info-value'>
+                            {Math.round(info.storageUsage / 1e9)}
+                          </div>
+                          <div className='info-unit'>GB</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {/*end of card*/}
@@ -406,7 +401,7 @@ class Profile extends Component {
                   )}
                   {/*end of filter*/}
                 </div>
-                <div class='app-center'>
+                <div className='app-block app-center'>
                   <MainComponent
                     className={classes.mainComponentContainer}
                     component={mainComponent.component}
@@ -415,16 +410,15 @@ class Profile extends Component {
                     callbacks={mainComponentSpecs.callbacks}
                   />
                 </div>
-                <div class='app-right'>
-                  <nav className='leader-1'>
+                <div className='app-block app-right'>
+                  <nav className='toggle-list'>
                     <button
                       aria-label='View your items in tabular'
                       className={
                         mode === 'table'
-                          ? 'btn tooltip'
-                          : 'btn btn-clear tooltip'
+                          ? 'btn btn-with-icon'
+                          : 'btn btn-clear btn-with-icon'
                       }
-                      style={{ marginRight: '10px' }}
                       onClick={this.displayTable.bind(this)}
                     >
                       <Icon>view_list</Icon>
@@ -433,124 +427,64 @@ class Profile extends Component {
                       aria-label='View your items in treemap'
                       className={
                         mode === 'chart'
-                          ? 'btn tooltip'
-                          : 'btn btn-clear tooltip'
+                          ? 'btn btn-with-icon'
+                          : 'btn btn-clear btn-with-icon'
                       }
-                      style={{ marginRight: '10px' }}
                       onClick={this.displayChart.bind(this)}
                     >
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
-                </div>
-                {/*end of card*/}
-                {/*start of filter*/}
-                {!isReviewing ? (
-                  <Fragment>
-                    <Filter
-                      data={getFilterData('filterSize')}
-                      callbacks={{ onChange: this.handleFilter.bind(this) }}
+                  <div className='doughnut-list'>
+                    <Doughnut
+                      data={creditDonutData}
+                      width={75}
+                      height={75}
+                      options={getDonutChartOptions()}
                     />
-                    <Filter
-                      data={getFilterData('filterDate')}
-                      callbacks={{ onChange: this.handleFilter.bind(this) }}
+                    <Doughnut
+                      data={sizeDonutData}
+                      width={75}
+                      height={75}
+                      options={getDonutChartOptions()}
                     />
-                    <Filter
-                      data={getFilterData(
-                        'filterType',
-                        getTypes(itemsForTypes)
-                      )}
-                      callbacks={{ onChange: this.handleFilter.bind(this) }}
+                    <Doughnut
+                      data={itemsDonutData}
+                      width={75}
+                      height={75}
+                      options={getDonutChartOptions()}
                     />
-                  </Fragment>
-                ) : (
-                  <Fragment />
-                )}
-                {/*end of filter*/}
-              </div>
-              <div className='app-block app-center'>
-                <MainComponent
-                  className={classes.mainComponentContainer}
-                  component={mainComponent.component}
-                  data={mainComponentSpecs.data}
-                  config={mainComponentSpecs.config}
-                  callbacks={mainComponentSpecs.callbacks}
-                />
-              </div>
-              <div className='app-block app-right'>
-                <nav className='toggle-list'>
-                  <button
-                    aria-label='View your items in tabular'
-                    className={
-                      mode === 'table'
-                        ? 'btn btn-with-icon'
-                        : 'btn btn-clear btn-with-icon'
-                    }
-                    onClick={this.displayTable.bind(this)}
-                  >
-                    <Icon>view_list</Icon>
-                  </button>
-                  <button
-                    aria-label='View your items in treemap'
-                    className={
-                      mode === 'chart'
-                        ? 'btn btn-with-icon'
-                        : 'btn btn-clear btn-with-icon'
-                    }
-                    style={{ marginRight: '10px' }}
-                    onClick={this.displayChart.bind(this)}
-                  >
-                    <Icon>view_quilt</Icon>
-                  </button>
-                </nav>
-                {mainComponent.component === 'chart' ? (
-                  <ItemsLegend
-                    data={unchangedContent}
-                    callbacks={{
-                      onClick: this.handleLegendItemClick.bind(this)
-                    }}
-                  />
-                ) : (
-                  <Fragment />
-                )}
-                <div className='doughnut-list'>
-                  <Doughnut
-                    data={creditDonutData}
-                    width={90}
-                    height={40}
-                    options={getDonutChartOptions()}
-                  />
-                  <Doughnut
-                    data={sizeDonutData}
-                    width={90}
-                    height={40}
-                    options={getDonutChartOptions()}
-                  />
-                  <Doughnut
-                    data={itemsDonutData}
-                    width={90}
-                    height={40}
-                    options={getDonutChartOptions()}
-                  />
-                </div>
-                <div className='control-list'>
-                  <button
-                    onClick={this.displayReviewSelection.bind(this)}
-                    className='btn btn-large btn-green'
-                    style={{ marginRight: '5px' }}
-                  >
-                    Review
-                  </button>
-                  <button
-                    onClick={this.handleFirstTryDelete.bind(this)}
-                    className={
-                      nodes.length === 0
-                        ? 'btn btn-large btn-red btn-disabled'
-                        : 'btn btn-large btn-red'
-                    }
-                  >
-                    Delete All
-                  </button>
+                  </div>
+                  {this.props.isReviewing ? (
+                    <div className='control-list'>
+                      <button
+                        onClick={this.handleFirstTryDelete.bind(this)}
+                        className={
+                          nodes.length === 0
+                            ? 'btn btn-fill btn-red btn-disabled'
+                            : 'btn btn-fill btn-red'
+                        }
+                        disabled={nodes.length === 0}
+                      >
+                        Delete All
+                      </button>
+                      <button
+                        onClick={this.displayTable.bind(this)}
+                        className='btn btn-clear btn-fill btn-green'
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div className='control-list'>
+                      <button
+                        onClick={this.displayReviewSelection.bind(this)}
+                        className='btn btn-fill btn-green'
+                      >
+                        Review
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </Container>

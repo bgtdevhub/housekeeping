@@ -1,5 +1,5 @@
 import React from 'react';
-// import tableStyles from './Table.css';
+import './ItemsList.css';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -48,12 +48,6 @@ function getIconByType(itemTypes, type) {
 }
 
 const styles = theme => ({
-  root: {
-    width: '100%'
-  },
-  table: {
-    minWidth: 1020
-  },
   tableWrapper: {
     overflowX: 'auto'
   }
@@ -90,26 +84,7 @@ class ItemsList extends React.Component {
     this.setState({ selected: [] });
   };
 
-  handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  };
+  handleClick = (event, id) => {};
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -128,13 +103,17 @@ class ItemsList extends React.Component {
   };
 
   handleToggleClick = (event, node, cb) => {
-    let action = 'add';
-    if (node.icon === 'add_circle') {
-      node.icon = 'remove_circle';
-      action = 'remove';
-    } else {
-      node.icon = 'add_circle';
-    }
+    const { id } = node;
+
+    const selected = [
+      ...this.state.selected.filter(x => x !== id),
+      ...(this.state.selected.includes(id) ? [] : [id])
+    ];
+
+    this.setState({ selected });
+
+    const action = selected.includes(id) ? 'remove' : 'add';
+
     cb(node, action);
   };
 
@@ -170,8 +149,6 @@ class ItemsList extends React.Component {
       anchorEl,
       hoverDataCell
     } = this.state;
-    const emptyRows =
-      rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const open = Boolean(anchorEl);
 
     console.log('data', this);
@@ -187,7 +164,10 @@ class ItemsList extends React.Component {
           callbacks={{ close: this.handlePopoverClose.bind(this) }}
         />
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby='tableTitle'>
+          <Table
+            className={classes.table + ' item-list-table'}
+            aria-labelledby='tableTitle'
+          >
             <TableHeader
               rows={config.rows}
               numSelected={selected.length}
@@ -198,73 +178,74 @@ class ItemsList extends React.Component {
               rowCount={data.length}
             />
             <TableBody>
-              {stableSort(data, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const isSelected = this.isSelected(n.id);
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => this.handleClick(event, n.id)}
-                      role='checkbox'
-                      aria-checked={isSelected}
-                      tabIndex={-1}
-                      key={n.id}
-                      selected={isSelected}
-                    >
-                      <TableCell padding='checkbox'>
-                        <Icon
-                          onClick={event =>
-                            this.handleToggleClick(
-                              event,
-                              n,
-                              callbacks.removeItem
-                            )
-                          }
-                        >
-                          {n.icon}
-                        </Icon>
-                      </TableCell>
-                      <TableCell component='th' scope='row' padding='none'>
-                        <img
-                          alt={n.type}
-                          src={
-                            '../../assets/img/' +
-                            getIconByType(config.itemTypes, n.type).icon +
-                            '16.png'
-                          }
-                        />
-                      </TableCell>
-                      <TableCell component='th' scope='row' padding='none'>
-                        <span
-                          className={'esri-icon-' + n.access + '16'}
-                          aria-label={n.access}
-                        />
-                      </TableCell>
-                      <TableCell component='th' scope='row' padding='none'>
-                        <Typography
-                          aria-owns={open ? 'mouse-over-popover' : undefined}
-                          aria-haspopup='true'
-                          onMouseOver={event =>
-                            this.handlePopoverOpen(event, n)
-                          }
-                        >
-                          {n.title}
-                        </Typography>
-                      </TableCell>
-                      <TableCell numeric>{n.modified}</TableCell>
-                      <TableCell numeric>
-                        {Math.round(n.size / 1e6)} MB
-                      </TableCell>
-                      <TableCell numeric>{n.numViews}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
+              {!data.length ? (
+                <TableRow>
+                  <TableCell colSpan='7'>No item in list.</TableCell>
                 </TableRow>
+              ) : (
+                stableSort(data, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(n => {
+                    const isSelected = this.isSelected(n.id);
+
+                    return (
+                      <TableRow
+                        role='checkbox'
+                        aria-checked={isSelected}
+                        tabIndex={-1}
+                        key={n.id}
+                        selected={isSelected}
+                        onClick={event =>
+                          this.handleToggleClick(event, n, callbacks.removeItem)
+                        }
+                      >
+                        <TableCell padding='checkbox'>
+                          <Icon
+                            className={`item-list-icon item-list-toggle${
+                              isSelected ? ' item-list-toggle--selected' : ''
+                            }`}
+                          >
+                            {isSelected ? 'remove_circle' : 'add_circle'}
+                          </Icon>
+                        </TableCell>
+                        <TableCell scope='row' padding='none'>
+                          <img
+                            className='item-list-icon'
+                            alt={n.type}
+                            src={
+                              '../../assets/img/' +
+                              getIconByType(config.itemTypes, n.type).icon +
+                              '16.png'
+                            }
+                          />
+                        </TableCell>
+                        <TableCell scope='row' padding='none'>
+                          <span
+                            className={
+                              'item-list-icon esri-icon-' + n.access + '16'
+                            }
+                            aria-label={n.access}
+                          />
+                        </TableCell>
+                        <TableCell scope='row' padding='none'>
+                          <Typography
+                            aria-owns={open ? 'mouse-over-popover' : undefined}
+                            aria-haspopup='true'
+                            onMouseOver={event =>
+                              this.handlePopoverOpen(event, n)
+                            }
+                          >
+                            {n.title}
+                          </Typography>
+                        </TableCell>
+                        <TableCell numeric>{n.modified}</TableCell>
+                        <TableCell numeric>
+                          {Math.round(n.size / 1e6)} MB
+                        </TableCell>
+                        <TableCell numeric>{n.numViews}</TableCell>
+                      </TableRow>
+                    );
+                  })
               )}
             </TableBody>
           </Table>

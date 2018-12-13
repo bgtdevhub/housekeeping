@@ -3,17 +3,17 @@ import { types } from '../constants/items';
 import typeColors from '../constants/typeColors';
 import { convertToGb, convertMbToB, convertToMb } from '../utils/profile';
 
-const getTotalSize = (data) => {
+const getTotalSize = data => {
   if (!Ydnlu.isEmpty(data)) {
     let sizes = data.map(item => item.value);
-    return sizes.reduce((acc, curr) => acc+curr)
+    return sizes.reduce((acc, curr) => acc + curr);
   }
 };
 
-const getTotalSizeDisplay = (data) => {
+const getTotalSizeDisplay = data => {
   if (!Ydnlu.isEmpty(data)) {
     let sizes = data.map(item => item.value);
-    const totalSize = sizes.reduce((acc, curr) => acc+curr);
+    const totalSize = sizes.reduce((acc, curr) => acc + curr);
     if (totalSize > 500) {
       return `${convertToGb(convertMbToB(totalSize))} GB`;
     }
@@ -94,17 +94,17 @@ export function getTreemapData(data) {
         children: items[key].children,
         totalSize,
         totalSizeDisplay
-      })
+      });
     }
   });
 
-  treemapData = treemapData.sort((a,b) => b.totalSize - a.totalSize);
+  treemapData = treemapData.sort((a, b) => b.totalSize - a.totalSize);
   treemapData.forEach((data, idx) => {
     data.color = getContrastCalciteColorByIndex(idx);
     colorsMapWithParentNode[data.name] = data.color;
   });
 
-  return  {
+  return {
     name: `${data.username} chart`,
     colors: colorsMapWithParentNode,
     color: '#a9a9a9',
@@ -116,18 +116,21 @@ export function getTreemapData(data) {
       }
     ]
   };
-
 }
-
 
 export function getDonutChartData(configs) {
   let chartData = {
-    labels: configs.labels || [],
-    datasets: [{
-      data: configs.data || [],
-      backgroundColor: configs.backgroundColor || ['#9081bc', '#ccc'],
-      hoverBackgroundColor: configs.hoverBackgroundColor || ['#7461a8', '#6e6e6e']
-    }],
+    labels: configs.labels || ['#333', '#e2e2e2'],
+    datasets: [
+      {
+        data: configs.data || [],
+        backgroundColor: configs.backgroundColor || ['#0079c1', '#d2d2d2'],
+        hoverBackgroundColor: configs.hoverBackgroundColor || [
+          '#005e95',
+          '#6e6e6e'
+        ]
+      }
+    ],
     text: configs.text || '',
     total: configs.total || 0
   };
@@ -136,14 +139,18 @@ export function getDonutChartData(configs) {
 }
 
 export function getDonutChartOptions(configs = {}) {
-  let chartOptions = Object.assign({
-    legend: {
-      display: false,
+  let chartOptions = Object.assign(
+    {
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      },
+      cutoutPercentage: 85
     },
-    tooltips: {
-      enabled: false,
-    }
-  }, configs);
+    configs
+  );
 
   return chartOptions;
 }

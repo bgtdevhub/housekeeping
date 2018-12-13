@@ -3,6 +3,24 @@ $font-path: './fonts' !default;
 $default-column-count: 12;
 @import 'node_modules/calcite-web/dist/sass/calcite-web';
 
+$green: #5a9359;
+$red: #de2900;
+$blue: #0079c1;
+
+@mixin btn-clear-color($color) {
+  border-color: $color;
+  color: $color;
+
+  &:hover,
+  &:focus,
+  &:active {
+    &:not([disabled]) {
+      color: #fff;
+      background: $color;
+    }
+  }
+}
+
 html {
   box-sizing: border-box;
 }
@@ -40,4 +58,31 @@ html {
 
 .app-center {
   flex: 1;
+}
+
+.btn {
+  padding: 0 10px;
+  height: 38px;
+  line-height: 38px;
+
+  &-clear {
+    &,
+    &.btn-green,
+    &.btn-red {
+      background: transparent;
+    }
+
+    &.btn-green {
+      @include btn-clear-color($green);
+    }
+
+    &.btn-red {
+      @include btn-clear-color($red);
+    }
+  }
+
+  &-red {
+    background: $red;
+    color: $white;
+  }
 }
