@@ -252,7 +252,7 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevStates) {
-    const { content, mode } = this.state;
+    const { content, mode, itemDeleted } = this.state;
     if (content !== prevStates.content) {
       if (mode === 'table') {
         this.updateTableState(content.items);
@@ -263,6 +263,10 @@ class Profile extends Component {
           this.updateChartState();
         }, 0);
       }
+    }
+
+    if (itemDeleted !== prevStates.itemDeleted && itemDeleted) {
+      calcite.bus.emit('modal:open', { id: 'notification' });
     }
   }
 
@@ -276,6 +280,7 @@ class Profile extends Component {
       itemTypes: props.itemTypes,
       nodes: props.nodes,
       isReviewing: props.isReviewing,
+      itemDeleted: props.itemDeleted,
       itemsForTypes: props.itemsForTypes,
       unchangedContent: props.unchangedContent
     };
@@ -502,6 +507,10 @@ class Profile extends Component {
               remove: this.handlePermanentDelete
             }}
           />
+          <NotificationModal
+            data={nodesInfo}
+            callbacks={{ close: this.handleCloseNotification }}
+          />
           {/*end of filter*/}
         </div>
       );
@@ -520,6 +529,8 @@ const profileStateToProps = state => {
     itemTypes: state.profileReducer.itemTypes,
     nodes: state.profileReducer.nodes,
     isReviewing: state.profileReducer.isReviewing,
+    itemDeleted: state.profileReducer.itemDeleted,
+    allItemsDeleted: state.profileReducer.allItemsDeleted,
     itemsForTypes: state.profileReducer.itemsForTypes,
     unchangedContent: state.profileReducer.unchangedContent
   };
@@ -536,7 +547,8 @@ const actions = {
   reviewRemoveSelection,
   filterBySize,
   filterByDate,
-  filterByType
+  filterByType,
+  getUserInfoSuccess
 };
 
 Profile.propTypes = {
