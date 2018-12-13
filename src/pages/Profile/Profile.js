@@ -222,7 +222,7 @@ class Profile extends Component {
       });
       return { data, config, callbacks };
     } else {
-      return mainComponent;
+      return Object.assign(mainComponent, { config: { nodes: nodes } });
     }
   };
 
@@ -307,25 +307,39 @@ class Profile extends Component {
       const nodesInfo = getNodesInfo(nodes);
       const mainComponentSpecs = this.getMainComponentSpecs(mainComponent);
       const totalEstimatedCredit =
-        nodesInfo.estimatedCredit - itemsInfo.estimatedCredit;
-      const totalEstimatedSize = nodesInfo.size - itemsInfo.size;
-      const totalEstimatedItems = nodesInfo.total - itemsInfo.total;
+        itemsInfo.estimatedCredit - nodesInfo.estimatedCredit;
+      const totalEstimatedSize = itemsInfo.size - nodesInfo.size;
+      const totalEstimatedItems = itemsInfo.total - nodesInfo.total;
+      /*
+       * if total of donut data equal to 0, just for nice displaying, we changed the total to 1
+       * By doing this the chart still show the circle
+       */
       const creditDonutData = getDonutChartData({
-        data: [nodesInfo.estimatedCredit, totalEstimatedCredit],
+        data: [
+          nodesInfo.estimatedCredit,
+          totalEstimatedCredit === 0 ? 1 : totalEstimatedCredit
+        ],
         total: nodesInfo.estimatedCredit,
         text: 'Credits'
       });
       const sizeDonutData = getDonutChartData({
-        data: [nodesInfo.size, totalEstimatedSize],
+        data: [
+          nodesInfo.size,
+          totalEstimatedSize === 0 ? 1 : totalEstimatedSize
+        ],
         total: nodesInfo.size,
         text: 'MB'
       });
       const itemsDonutData = getDonutChartData({
-        data: [nodesInfo.total, totalEstimatedItems],
+        data: [
+          nodesInfo.total,
+          totalEstimatedItems === 0 ? 1 : totalEstimatedItems
+        ],
         total: nodesInfo.total,
         text: 'Items'
       });
-
+      console.log('creditDonutData', creditDonutData);
+      console.log('sizeDonutData', sizeDonutData);
       return (
         <div className='profile'>
           <DHLayout className={classes.root}>
@@ -333,7 +347,7 @@ class Profile extends Component {
               <div className='app-container'>
                 <div className='app-block app-left'>
                   {/*start of card*/}
-                  <div className='profile-card card card-shaped'>
+                  <div className='card card-shaped block trailer-1'>
                     <figure className='card-image-wrap'>
                       <img
                         src={thumbnail}
@@ -392,7 +406,7 @@ class Profile extends Component {
                   )}
                   {/*end of filter*/}
                 </div>
-                <div className='app-block app-center'>
+                <div class='app-center'>
                   <MainComponent
                     className={classes.mainComponentContainer}
                     component={mainComponent.component}
@@ -401,15 +415,16 @@ class Profile extends Component {
                     callbacks={mainComponentSpecs.callbacks}
                   />
                 </div>
-                <div className='app-block app-right'>
-                  <nav className='toggle-list'>
+                <div class='app-right'>
+                  <nav className='leader-1'>
                     <button
                       aria-label='View your items in tabular'
                       className={
                         mode === 'table'
-                          ? 'btn btn-with-icon'
-                          : 'btn btn-clear btn-with-icon'
+                          ? 'btn tooltip'
+                          : 'btn btn-clear tooltip'
                       }
+                      style={{ marginRight: '10px' }}
                       onClick={this.displayTable.bind(this)}
                     >
                       <Icon>view_list</Icon>
@@ -418,8 +433,8 @@ class Profile extends Component {
                       aria-label='View your items in treemap'
                       className={
                         mode === 'chart'
-                          ? 'btn btn-with-icon'
-                          : 'btn btn-clear btn-with-icon'
+                          ? 'btn tooltip'
+                          : 'btn btn-clear tooltip'
                       }
                       style={{ marginRight: '10px' }}
                       onClick={this.displayChart.bind(this)}
@@ -427,55 +442,115 @@ class Profile extends Component {
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
-                  {mainComponent.component === 'chart' ? (
-                    <ItemsLegend
-                      data={unchangedContent}
-                      callbacks={{
-                        onClick: this.handleLegendItemClick.bind(this)
-                      }}
+                </div>
+                {/*end of card*/}
+                {/*start of filter*/}
+                {!isReviewing ? (
+                  <Fragment>
+                    <Filter
+                      data={getFilterData('filterSize')}
+                      callbacks={{ onChange: this.handleFilter.bind(this) }}
                     />
-                  ) : (
-                    <Fragment />
-                  )}
-                  <div className='doughnut-list'>
-                    <Doughnut
-                      data={creditDonutData}
-                      width={90}
-                      height={40}
-                      options={getDonutChartOptions()}
+                    <Filter
+                      data={getFilterData('filterDate')}
+                      callbacks={{ onChange: this.handleFilter.bind(this) }}
                     />
-                    <Doughnut
-                      data={sizeDonutData}
-                      width={90}
-                      height={40}
-                      options={getDonutChartOptions()}
+                    <Filter
+                      data={getFilterData(
+                        'filterType',
+                        getTypes(itemsForTypes)
+                      )}
+                      callbacks={{ onChange: this.handleFilter.bind(this) }}
                     />
-                    <Doughnut
-                      data={itemsDonutData}
-                      width={90}
-                      height={40}
-                      options={getDonutChartOptions()}
-                    />
-                  </div>
-                  <div className='control-list'>
-                    <button
-                      onClick={this.displayReviewSelection.bind(this)}
-                      className='btn btn-large btn-green'
-                      style={{ marginRight: '5px' }}
-                    >
-                      Review
-                    </button>
-                    <button
-                      onClick={this.handleFirstTryDelete.bind(this)}
-                      className={
-                        nodes.length === 0
-                          ? 'btn btn-large btn-red btn-disabled'
-                          : 'btn btn-large btn-red'
-                      }
-                    >
-                      Delete All
-                    </button>
-                  </div>
+                  </Fragment>
+                ) : (
+                  <Fragment />
+                )}
+                {/*end of filter*/}
+              </div>
+              <div className='app-block app-center'>
+                <MainComponent
+                  className={classes.mainComponentContainer}
+                  component={mainComponent.component}
+                  data={mainComponentSpecs.data}
+                  config={mainComponentSpecs.config}
+                  callbacks={mainComponentSpecs.callbacks}
+                />
+              </div>
+              <div className='app-block app-right'>
+                <nav className='toggle-list'>
+                  <button
+                    aria-label='View your items in tabular'
+                    className={
+                      mode === 'table'
+                        ? 'btn btn-with-icon'
+                        : 'btn btn-clear btn-with-icon'
+                    }
+                    onClick={this.displayTable.bind(this)}
+                  >
+                    <Icon>view_list</Icon>
+                  </button>
+                  <button
+                    aria-label='View your items in treemap'
+                    className={
+                      mode === 'chart'
+                        ? 'btn btn-with-icon'
+                        : 'btn btn-clear btn-with-icon'
+                    }
+                    style={{ marginRight: '10px' }}
+                    onClick={this.displayChart.bind(this)}
+                  >
+                    <Icon>view_quilt</Icon>
+                  </button>
+                </nav>
+                {mainComponent.component === 'chart' ? (
+                  <ItemsLegend
+                    data={unchangedContent}
+                    callbacks={{
+                      onClick: this.handleLegendItemClick.bind(this)
+                    }}
+                  />
+                ) : (
+                  <Fragment />
+                )}
+                <div className='doughnut-list'>
+                  <Doughnut
+                    data={creditDonutData}
+                    width={90}
+                    height={40}
+                    options={getDonutChartOptions()}
+                  />
+                  <Doughnut
+                    data={sizeDonutData}
+                    width={90}
+                    height={40}
+                    options={getDonutChartOptions()}
+                  />
+                  <Doughnut
+                    data={itemsDonutData}
+                    width={90}
+                    height={40}
+                    options={getDonutChartOptions()}
+                  />
+                </div>
+                <div className='control-list'>
+                  <button
+                    onClick={this.displayReviewSelection.bind(this)}
+                    className='btn btn-large btn-green'
+                    style={{ marginRight: '5px' }}
+                  >
+                    Review
+                  </button>
+                  <button
+                    onClick={this.handleFirstTryDelete.bind(this)}
+                    className={
+                      nodes.length === 0
+                        ? 'btn btn-large btn-red btn-disabled'
+                        : 'btn btn-large btn-red'
+                    }
+                  >
+                    Delete All
+                  </button>
                 </div>
               </div>
             </Container>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Ydnlu from '../../../utils/ydnlu';
-import { getTreemapData } from '../../../utils/chart';
+import { getTreemapData, getContrastCalciteColorByIndex } from '../../../utils/chart';
 
 class ItemsLegend extends Component {
   state = {
@@ -19,13 +19,13 @@ class ItemsLegend extends Component {
             overflow: 'scroll',
             overflowX: 'hidden'
           }}>
-          {chartData.children[0].children.map(item => {
+          {chartData.children[0].children.map((item, idx) => {
             return <li key={item.name}>
                 <button onClick={(event) => callbacks.onClick(item, event)}
                   className="btn btn-small"
-                  style={{backgroundColor: item.typeColor, border: '2px solid #595959'}}>
-                  {item.name}
-                </button> {item.totalSize}
+                  style={{backgroundColor: getContrastCalciteColorByIndex(idx), border: '2px solid #595959'}}>
+                  {item.name} ({item.totalSizeDisplay})
+                </button>
               </li>
           }
         )}
