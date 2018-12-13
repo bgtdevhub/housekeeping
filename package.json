@@ -8,7 +8,7 @@
     "@material-ui/core": "^3.4.0",
     "@material-ui/icons": "^3.0.1",
     "@nivo/treemap": "^0.51.0",
-    "calcite-react": "^0.15.0",
+    "calcite-react": "^0.28.1",
     "calcite-ui-icons-react": "^0.1.4",
     "calcite-web": "Esri/calcite-web#v1.1.0",
     "chart.js": "^2.7.3",

@@ -67,7 +67,8 @@ class ItemsList extends React.Component {
     page: 0,
     rowsPerPage: 0,
     anchorEl: null,
-    hoverDataCell: {}
+    hoverDataCell: {},
+    loading: false
   };
 
   handleRequestSort = (event, property) => {

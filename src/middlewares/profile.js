@@ -16,7 +16,8 @@ import {
   FILTER_BY_DATE,
   FILTER_BY_DATE_DONE,
   FILTER_BY_TYPE,
-  FILTER_BY_TYPE_DONE
+  FILTER_BY_TYPE_DONE,
+  ITEM_DELETED
 } from '../constants/actions';
 import { getUsername } from '../utils/auth';
 import { getTreemapData } from '../utils/chart';
@@ -56,14 +57,14 @@ export const profileUser = store => {
                 });
                 content.items = allItems;
                 const chart = getTreemapData(content);
-                console.log('perspective',chart);
                 store.dispatch({
                   type: GET_USER_CONTENT,
                   content: content,
                   itemsForTypes: [...content.items],
                   thumbnail: thumbnail,
                   itemTypes: types,
-                  chart
+                  chart,
+                  itemDeleted: false
                 });
               });
             })
@@ -79,6 +80,7 @@ export const profileItemsRemoval = store => {
 
     return next => action => {
         next(action);
+        const { info } = store.getState().profileReducer;
         switch (action.type) {
 
           case ADD_REMOVE_BUTTON_TOGGLE:
@@ -95,10 +97,7 @@ export const profileItemsRemoval = store => {
               removedItemPromises.push(argisApi.deleteItem(getUsername(), item.id));
             });
             Promise.all([...removedItemPromises]).then(() => {
-              argisApi.getUserContent(getUsername()).then((currentContent)=> {
-                // store.dispatch({ type: AUTH_SUCCESS, data: action.hash });
-                window.location.reload();
-              })
+              store.dispatch({ type: ITEM_DELETED, mode: 'table', itemDeleted: true, nodes: [] });
             });
             break;
 

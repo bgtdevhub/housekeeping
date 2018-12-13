@@ -12,7 +12,8 @@ import config from 'react-global-configuration';
 
 // Calcite React
 import { ThemeProvider } from 'styled-components';
-import CalciteTheme from 'calcite-react/theme/CalciteTheme';
+// import CalciteTheme from 'calcite-react/theme/CalciteTheme';
+import CalciteThemeProvider from 'calcite-react/CalciteThemeProvider';
 
 window.configPromise.then(configData => {
   config.set((JSON.parse(configData)));
@@ -21,14 +22,16 @@ window.configPromise.then(configData => {
 
   ReactDOM.render(
     <Provider store={store}>
-      <ThemeProvider theme={CalciteTheme}>
-      <Router>
-        <div>
-          <Route exact path='/' component={App} />
-          <Route path='/profile' component={Profile} />
-        </div>
-      </Router>
-    </ThemeProvider>
+      {/*<ThemeProvider theme={CalciteTheme}>*/}
+      <CalciteThemeProvider>
+        <Router>
+          <div>
+            <Route exact path='/' component={App} />
+            <Route path='/profile' component={Profile} />
+          </div>
+        </Router>
+      </CalciteThemeProvider>
+    {/*</ThemeProvider>*/}
     </Provider>,
     document.getElementById('root')
   );

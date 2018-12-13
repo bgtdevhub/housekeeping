@@ -21,14 +21,16 @@ import {
   reviewRemoveSelection,
   filterBySize,
   filterByDate,
-  filterByType
+  filterByType,
+  getUserInfoSuccess
 } from '../../actions/profile';
 import MainComponent from './MainComponent/MainComponent';
 import DHLayout from '../../components/Layout/Layout';
-import { FirstTryModal, SecondTryModal } from './Modals/Modals';
+import { FirstTryModal, SecondTryModal, NotificationModal } from './Modals/Modals';
 import Loader from './Loader/Loader';
 import ItemsLegend from './ItemsLegend/ItemsLegend';
 import Filter from './Filter/Filter';
+import Button from 'calcite-react/Button';
 
 const styles = theme => ({
   root: {
@@ -134,7 +136,14 @@ class Profile extends Component {
   }
 
   displayReviewSelection() {
-    this.props.reviewRemoveSelection();
+    const { isReviewing } = this.state;
+
+    if (isReviewing) {
+      this.handleFirstTryDelete();
+    } else {
+      this.props.reviewRemoveSelection();
+    }
+
   }
 
   handleFirstTryDelete = () => {
@@ -152,6 +161,14 @@ class Profile extends Component {
 
   handleCloseSecondTryModal = () => {
     calcite.bus.emit('modal:close', {id: 'secondDeleteConfirmation'});
+  };
+
+  handleCloseNotification = () => {
+    this.props.getUserInfoSuccess(this.state.info);
+    calcite.bus.emit('modal:close', {id: 'notification'});
+    this.props.toggleIconClick('table');
+    this.refreshMainComponent();
+    this.updateTableState(this.state.content.items);
   };
 
   handlePermanentDelete = () => {
@@ -249,7 +266,7 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevStates) {
-    const { content, mode } = this.state;
+    const { content, mode, itemDeleted } = this.state;
     if (content !== prevStates.content) {
       if (mode === 'table' ) {
         this.updateTableState(content.items);
@@ -259,6 +276,10 @@ class Profile extends Component {
           this.updateChartState();
         }, 0)
       }
+    }
+
+    if (itemDeleted !== prevStates.itemDeleted && itemDeleted) {
+      calcite.bus.emit('modal:open', {id: 'notification'});
     }
   }
 
@@ -272,6 +293,7 @@ class Profile extends Component {
       itemTypes: props.itemTypes,
       nodes: props.nodes,
       isReviewing: props.isReviewing,
+      itemDeleted: props.itemDeleted,
       itemsForTypes: props.itemsForTypes,
       unchangedContent: props.unchangedContent
     };
@@ -369,8 +391,9 @@ class Profile extends Component {
                       <Doughnut data={sizeDonutData} width={90} height={40} options={getDonutChartOptions()} />
                       <Doughnut data={itemsDonutData} width={90} height={40} options={getDonutChartOptions()} />
                       <br />
-                      <button onClick={this.displayReviewSelection.bind(this)} className="btn btn-large btn-green" style={{marginRight: '5px'}}>Review</button>
-                      <button onClick={this.handleFirstTryDelete.bind(this)} className={(nodes.length === 0) ? 'btn btn-large btn-red btn-disabled' : 'btn btn-large btn-red'}>Delete All</button>
+                      <Button clear={isReviewing} disabled={nodes.length < 1} onClick={this.displayReviewSelection.bind(this)}>
+                        {isReviewing ? (nodes.length > 1 ? 'Delete All' : 'Delete') : 'Review'}
+                      </Button>
                     </Col>
                   </Row>
                 </Container>
@@ -385,7 +408,11 @@ class Profile extends Component {
                 data={nodesInfo}
                 callbacks={ {close: this.handleCloseSecondTryModal, remove: this.handlePermanentDelete} }>
               </SecondTryModal>
-              {/*end of filter*/}
+              <NotificationModal
+                data={nodesInfo}
+                callbacks={ {close: this.handleCloseNotification} }>
+              </NotificationModal>
+              {/*end of modals*/}
             </div>
         );
       }
@@ -404,6 +431,8 @@ const profileStateToProps = state => {
     itemTypes: state.profileReducer.itemTypes,
     nodes: state.profileReducer.nodes,
     isReviewing: state.profileReducer.isReviewing,
+    itemDeleted: state.profileReducer.itemDeleted,
+    allItemsDeleted: state.profileReducer.allItemsDeleted,
     itemsForTypes: state.profileReducer.itemsForTypes,
     unchangedContent: state.profileReducer.unchangedContent
   };
@@ -420,7 +449,8 @@ const actions = {
   reviewRemoveSelection,
   filterBySize,
   filterByDate,
-  filterByType
+  filterByType,
+  getUserInfoSuccess
 };
 
 Profile.propTypes = {
