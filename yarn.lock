@@ -800,6 +800,11 @@
   dependencies:
     tslib "^1.7.1"
 
+"@esri/arcgis-rest-common-types@^1.14.3":
+  version "1.14.3"
+  resolved "https://registry.yarnpkg.com/@esri/arcgis-rest-common-types/-/arcgis-rest-common-types-1.14.3.tgz#665323f91c4fdf5c833d6caa2030ffa218380e1d"
+  integrity sha512-nFcGrevr+hJLxUyJjDqMP5Mi8LeqyS5Fj2JeBZZNGfOmSnDQg0Zvcx/khsk7Bkt7cjLQoOPAcPoHGM+Yr5kR+Q==
+
 "@esri/arcgis-rest-request@^1.13.2":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@esri/arcgis-rest-request/-/arcgis-rest-request-1.14.1.tgz#add564606ebf2ed56cb74a27606c52d0a5d25f44"
@@ -6901,7 +6906,7 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdi
   dependencies:
     minimist "0.0.8"
 
-moment@>=1.6.0, moment@^2.10.2:
+moment@>=1.6.0, moment@^2.10.2, moment@^2.22.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
@@ -9008,7 +9013,7 @@ react-with-styles-interface-css@^4.0.2:
     array.prototype.flat "^1.2.1"
     global-cache "^1.2.1"
 
-react-with-styles@^3.2.0:
+react-with-styles@^3.2.0, react-with-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/react-with-styles/-/react-with-styles-3.2.1.tgz#57a313ae3dcd0b347193a5538d5061d3bb96bab4"
   integrity sha512-L+x/EDgrKkqV6pTfDtLMShf7Xs+bVQ+HAT5rByX88QYX+ft9t5Gn4PWMmg36Ur21IVEBMGjjQQIJGJpBrzbsyg==

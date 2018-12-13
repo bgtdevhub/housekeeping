@@ -1,47 +1,33 @@
-//Essential
-.progChart {
-  canvas {margin: 0 auto;}
-  &.-type-donut.-label-centered {
-    .progChart__summary {
-      position: absolute;
-      Top: 17%;
-      display: block;
-      width: 100%;
-      text-align: center;
-      .progChart__summary__title {
-        margin: -15px 0 0;
-      }
-      .progChart__summary__number {
-        font-size: 48px;
-        margin: 0;
-      }
-
-    }
-  }
+.toggle-list {
+  display: flex;
+  justify-content: center;
 }
 
-
-
-body {
-  background: #222428;
-  font-family: "Oswald", sans-serif;
-  font-weight: 300;
-  color: #FFF;
+.toggle-list .btn + .btn {
+  margin-left: 10px;
 }
 
-.misc-wrap {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  margin: 0 auto;
-  position: relative;
-  border: 1px solid #FFF;
-  box-sizing: border-box;
-  padding: 20px 0;
-  border-radius: 10px;
+.btn-with-icon {
+  display: flex;
+  margin: 0;
 }
 
-p {
-  text-align: center;
-  a {color: #FFF;}
+.btn-with-icon > span {
+  margin: auto;
+}
+
+.profile-card {
+  margin-bottom: 20px;
+}
+
+.doughnut-list {
+  margin-top: 40px;
+}
+
+.chartjs-render-monitor + .chartjs-render-monitor {
+  margin-top: 20px;
+}
+
+.control-list {
+  margin-top: 40px;
 }

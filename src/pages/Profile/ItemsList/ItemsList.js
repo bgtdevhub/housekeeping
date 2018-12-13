@@ -24,7 +24,9 @@ function stableSort(array, cmp) {
 }
 
 function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+  return order === 'desc'
+    ? (a, b) => desc(a, b, orderBy)
+    : (a, b) => -desc(a, b, orderBy);
 }
 
 function desc(a, b, orderBy) {
@@ -40,22 +42,21 @@ function desc(a, b, orderBy) {
 function getIconByType(itemTypes, type) {
   let ret = itemTypes.find(item => item.type == type);
   if (ret === undefined) {
-    return { icon: "datafilesGray" };
+    return { icon: 'datafilesGray' };
   }
   return itemTypes.find(item => item.type == type);
 }
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    width: '100%'
   },
   table: {
-    minWidth: 1020,
+    minWidth: 1020
   },
   tableWrapper: {
-    overflowX: 'auto',
-  },
+    overflowX: 'auto'
+  }
 });
 
 class ItemsList extends React.Component {
@@ -103,7 +104,7 @@ class ItemsList extends React.Component {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -141,7 +142,7 @@ class ItemsList extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) {
-      this.setState({data:this.props.data})
+      this.setState({ data: this.props.data });
     }
   }
 
@@ -153,23 +154,40 @@ class ItemsList extends React.Component {
       page: this.props.config.page,
       order: this.props.config.order,
       orderBy: this.props.config.orderBy,
-      selected: this.props.config.selected,
+      selected: this.props.config.selected
     });
   }
 
   render() {
     const { classes, config, callbacks } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page, anchorEl, hoverDataCell } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const {
+      data,
+      order,
+      orderBy,
+      selected,
+      rowsPerPage,
+      page,
+      anchorEl,
+      hoverDataCell
+    } = this.state;
+    const emptyRows =
+      rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     const open = Boolean(anchorEl);
 
     console.log('data', this);
 
     return (
-      <Paper className={classes.root} onMouseLeave={(event) => this.handlePopoverClose(event)}>
-        <PopupDetail data={hoverDataCell} config={{anchorEl:anchorEl, open:open}} callbacks={{close:this.handlePopoverClose.bind(this)}} />
+      <Paper
+        className={classes.root}
+        onMouseLeave={event => this.handlePopoverClose(event)}
+      >
+        <PopupDetail
+          data={hoverDataCell}
+          config={{ anchorEl: anchorEl, open: open }}
+          callbacks={{ close: this.handlePopoverClose.bind(this) }}
+        />
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
+          <Table className={classes.table} aria-labelledby='tableTitle'>
             <TableHeader
               rows={config.rows}
               numSelected={selected.length}
@@ -189,32 +207,56 @@ class ItemsList extends React.Component {
                     <TableRow
                       hover
                       onClick={event => this.handleClick(event, n.id)}
-                      role="checkbox"
+                      role='checkbox'
                       aria-checked={isSelected}
                       tabIndex={-1}
                       key={n.id}
                       selected={isSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Icon onClick={(event)=>this.handleToggleClick(event, n, callbacks.removeItem)}>{n.icon}</Icon>
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        <img alt={n.type} src={("../../assets/img/"+getIconByType(config.itemTypes, n.type).icon+"16.png")}></img>
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        <span className={("esri-icon-"+n.access+"16")} aria-label={n.access}></span>
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        <Typography
-                         aria-owns={open ? "mouse-over-popover" : undefined}
-                         aria-haspopup="true"
-                         onMouseOver={(event) => this.handlePopoverOpen(event, n)}
+                      <TableCell padding='checkbox'>
+                        <Icon
+                          onClick={event =>
+                            this.handleToggleClick(
+                              event,
+                              n,
+                              callbacks.removeItem
+                            )
+                          }
                         >
-                         {n.title}
+                          {n.icon}
+                        </Icon>
+                      </TableCell>
+                      <TableCell component='th' scope='row' padding='none'>
+                        <img
+                          alt={n.type}
+                          src={
+                            '../../assets/img/' +
+                            getIconByType(config.itemTypes, n.type).icon +
+                            '16.png'
+                          }
+                        />
+                      </TableCell>
+                      <TableCell component='th' scope='row' padding='none'>
+                        <span
+                          className={'esri-icon-' + n.access + '16'}
+                          aria-label={n.access}
+                        />
+                      </TableCell>
+                      <TableCell component='th' scope='row' padding='none'>
+                        <Typography
+                          aria-owns={open ? 'mouse-over-popover' : undefined}
+                          aria-haspopup='true'
+                          onMouseOver={event =>
+                            this.handlePopoverOpen(event, n)
+                          }
+                        >
+                          {n.title}
                         </Typography>
                       </TableCell>
                       <TableCell numeric>{n.modified}</TableCell>
-                      <TableCell numeric>{Math.round((n.size/1e+6))} MB</TableCell>
+                      <TableCell numeric>
+                        {Math.round(n.size / 1e6)} MB
+                      </TableCell>
                       <TableCell numeric>{n.numViews}</TableCell>
                     </TableRow>
                   );
@@ -228,15 +270,15 @@ class ItemsList extends React.Component {
           </Table>
         </div>
         <TablePagination
-          component="div"
+          component='div'
           count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={{
-            'aria-label': 'Previous Page',
+            'aria-label': 'Previous Page'
           }}
           nextIconButtonProps={{
-            'aria-label': 'Next Page',
+            'aria-label': 'Next Page'
           }}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
@@ -247,7 +289,7 @@ class ItemsList extends React.Component {
 }
 
 ItemsList.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ItemsList);

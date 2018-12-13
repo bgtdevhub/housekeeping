@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import profileStyles from './Profile.css';
+import './Profile.css';
 import * as calcite from 'calcite-web';
 import { Container, Row, Col } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
@@ -32,23 +32,14 @@ import Filter from './Filter/Filter';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-  },
-  profileContainer: {
-    marginTop: '24px'
-  },
-  toggleContainer: {
-    marginTop: '24px'
+    flexGrow: 1
   },
   avatar: {
-    margin: 10,
+    margin: 10
   },
   bigAvatar: {
     width: 60,
-    height: 60,
-  },
-  mainComponentContainer: {
-    marginTop: '24px'
+    height: 60
   }
 });
 
@@ -57,16 +48,26 @@ class Profile extends Component {
     rows: [
       { id: 'type', numeric: false, disablePadding: true, label: '' },
       { id: 'access', numeric: false, disablePadding: true, label: '' },
-      { id: 'title', numeric: false, disablePadding: true, label: 'Item Title' },
-      { id: 'modified', numeric: true, disablePadding: false, label: 'Last Accessed' },
+      {
+        id: 'title',
+        numeric: false,
+        disablePadding: true,
+        label: 'Item Title'
+      },
+      {
+        id: 'modified',
+        numeric: true,
+        disablePadding: false,
+        label: 'Last Accessed'
+      },
       { id: 'size', numeric: true, disablePadding: false, label: 'File Size' },
-      { id: 'numViews', numeric: true, disablePadding: false, label: 'Views' },
+      { id: 'numViews', numeric: true, disablePadding: false, label: 'Views' }
     ],
     order: 'desc',
     orderBy: 'size',
     selected: [],
     page: 0,
-    rowsPerPage: 10,
+    rowsPerPage: 10
   };
 
   state = {
@@ -77,9 +78,9 @@ class Profile extends Component {
       config: Ydnlu.clone(this.tableConfig),
       creditSetData: [0, 0],
       sizeSetData: [0, 0],
-      itemsSetData: [0, 0],
+      itemsSetData: [0, 0]
     }
-  }
+  };
 
   removeItem(node, triggerFor) {
     this.props.addRemoveButtonToggle(node, triggerFor);
@@ -93,8 +94,8 @@ class Profile extends Component {
       // if (triggerFor === 'add') {
       //   this.displayReviewSelection();
       // }
-    }, 0)
-  };
+    }, 0);
+  }
 
   updateChartState(data) {
     if (data === undefined) data = this.state.chart;
@@ -112,7 +113,9 @@ class Profile extends Component {
       mainComponent: {
         component: 'table',
         data: data,
-        config: Object.assign(Ydnlu.clone(this.tableConfig), {itemTypes:itemTypes}),
+        config: Object.assign(Ydnlu.clone(this.tableConfig), {
+          itemTypes: itemTypes
+        }),
         callbacks: {
           removeItem: this.removeItem.bind(this)
         }
@@ -138,20 +141,20 @@ class Profile extends Component {
   }
 
   handleFirstTryDelete = () => {
-    calcite.bus.emit('modal:open', {id: 'firstDeleteConfirmation'});
+    calcite.bus.emit('modal:open', { id: 'firstDeleteConfirmation' });
   };
 
   handleCloseFirstTryModal = () => {
-    calcite.bus.emit('modal:close', {id: 'firstDeleteConfirmation'});
+    calcite.bus.emit('modal:close', { id: 'firstDeleteConfirmation' });
   };
 
   handleSecondTryModal = () => {
     this.handleCloseFirstTryModal();
-    calcite.bus.emit('modal:open', {id: 'secondDeleteConfirmation'});
+    calcite.bus.emit('modal:open', { id: 'secondDeleteConfirmation' });
   };
 
   handleCloseSecondTryModal = () => {
-    calcite.bus.emit('modal:close', {id: 'secondDeleteConfirmation'});
+    calcite.bus.emit('modal:close', { id: 'secondDeleteConfirmation' });
   };
 
   handlePermanentDelete = () => {
@@ -161,31 +164,32 @@ class Profile extends Component {
     this.props.permanentRemoveItem(nodes, hash);
   };
 
-  handleLegendItemClick(node){
+  handleLegendItemClick(node) {
     this.refreshMainComponent();
     this.props.legendItemClick(node);
     setTimeout(() => {
       this.updateChartState();
-    }, 0)
-  };
+    }, 0);
+  }
 
   handleFilter(key, selectedItem) {
     const { mode, content } = this.state;
     const actions = {
       size: 'filterBySize',
       date: 'filterByDate',
-      type: 'filterByType',
-    }
+      type: 'filterByType'
+    };
     this.props[actions[key]](selectedItem);
     if (mode === 'chart') {
       this.refreshMainComponent();
       setTimeout(() => {
         this.updateChartState();
-      }, 0)
-    } else { // for now its table
+      }, 0);
+    } else {
+      // for now its table
       this.updateTableState(content.items);
     }
-  };
+  }
 
   refreshMainComponent = () => {
     this.setState({
@@ -196,11 +200,11 @@ class Profile extends Component {
     });
   };
 
-  getMainComponentSpecs = (mainComponent) => {
+  getMainComponentSpecs = mainComponent => {
     const { content, itemTypes, nodes, isReviewing } = this.state;
     if (mainComponent.component === 'table') {
       let items = [...content.items].map(item => {
-        let newItem = {...item};
+        let newItem = { ...item };
         newItem.icon = 'add_circle';
         if (nodes.length > 0) {
           if (nodes.find(node => node.id == newItem.id)) {
@@ -209,9 +213,13 @@ class Profile extends Component {
         }
         return newItem;
       });
-      const data = (isReviewing) ? nodes : items;
-      const config = Object.assign(mainComponent.config, {itemTypes:itemTypes});
-      const callbacks = Object.assign(mainComponent.callbacks, {removeItem: this.removeItem.bind(this)});
+      const data = isReviewing ? nodes : items;
+      const config = Object.assign(mainComponent.config, {
+        itemTypes: itemTypes
+      });
+      const callbacks = Object.assign(mainComponent.callbacks, {
+        removeItem: this.removeItem.bind(this)
+      });
       return { data, config, callbacks };
     } else {
       return mainComponent;
@@ -221,7 +229,7 @@ class Profile extends Component {
   componentDidMount() {
     const originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
     calcite.init();
-    if (this.props.location.hash.indexOf("#access_token") !== -1) {
+    if (this.props.location.hash.indexOf('#access_token') !== -1) {
       const hash = this.props.location.hash;
       this.props.authSuccess(hash);
     }
@@ -234,8 +242,8 @@ class Profile extends Component {
         const height = chart.chart.height;
         const ctx = chart.chart.ctx;
         const fontSize = (height / 200).toFixed(2);
-        ctx.font = fontSize + "em sans-serif";
-        ctx.textBaseline = "middle";
+        ctx.font = fontSize + 'em sans-serif';
+        ctx.textBaseline = 'middle';
         const num = chart.config.data.total || 0;
         const numX = Math.round((width - ctx.measureText(num).width) / 2);
         const numY = height / 2.2;
@@ -251,13 +259,14 @@ class Profile extends Component {
   componentDidUpdate(prevProps, prevStates) {
     const { content, mode } = this.state;
     if (content !== prevStates.content) {
-      if (mode === 'table' ) {
+      if (mode === 'table') {
         this.updateTableState(content.items);
-      } else { // for now is chart
+      } else {
+        // for now is chart
         this.refreshMainComponent();
         setTimeout(() => {
           this.updateChartState();
-        }, 0)
+        }, 0);
       }
     }
   }
@@ -278,114 +287,219 @@ class Profile extends Component {
   }
 
   render() {
-      const { content } = this.state;
-      const { classes } = this.props;
+    const { content } = this.state;
+    const { classes } = this.props;
 
-      if (content === undefined) {
-        return (
-          <Loader />
-        )
-      } else {
-        const { info, mode, thumbnail, mainComponent, unchangedContent, nodes, itemsForTypes, isReviewing } = this.state;
-        const itemsInfo = getNodesInfo(content.items);
-        const nodesInfo = getNodesInfo(nodes);
-        const mainComponentSpecs = this.getMainComponentSpecs(mainComponent);
-        const totalEstimatedCredit = (nodesInfo.estimatedCredit - itemsInfo.estimatedCredit);
-        const totalEstimatedSize = (nodesInfo.size - itemsInfo.size);
-        const totalEstimatedItems = (nodesInfo.total - itemsInfo.total);
-        const creditDonutData = getDonutChartData({data:[nodesInfo.estimatedCredit, totalEstimatedCredit], total: nodesInfo.estimatedCredit, text: 'Credits'});
-        const sizeDonutData = getDonutChartData({data:[nodesInfo.size, totalEstimatedSize], total: nodesInfo.size, text: 'MB'});
-        const itemsDonutData = getDonutChartData({data:[nodesInfo.total, totalEstimatedItems], total: nodesInfo.total, text: 'Items'});
+    if (content === undefined) {
+      return <Loader />;
+    } else {
+      const {
+        info,
+        mode,
+        thumbnail,
+        mainComponent,
+        unchangedContent,
+        nodes,
+        itemsForTypes,
+        isReviewing
+      } = this.state;
+      const itemsInfo = getNodesInfo(content.items);
+      const nodesInfo = getNodesInfo(nodes);
+      const mainComponentSpecs = this.getMainComponentSpecs(mainComponent);
+      const totalEstimatedCredit =
+        nodesInfo.estimatedCredit - itemsInfo.estimatedCredit;
+      const totalEstimatedSize = nodesInfo.size - itemsInfo.size;
+      const totalEstimatedItems = nodesInfo.total - itemsInfo.total;
+      const creditDonutData = getDonutChartData({
+        data: [nodesInfo.estimatedCredit, totalEstimatedCredit],
+        total: nodesInfo.estimatedCredit,
+        text: 'Credits'
+      });
+      const sizeDonutData = getDonutChartData({
+        data: [nodesInfo.size, totalEstimatedSize],
+        total: nodesInfo.size,
+        text: 'MB'
+      });
+      const itemsDonutData = getDonutChartData({
+        data: [nodesInfo.total, totalEstimatedItems],
+        total: nodesInfo.total,
+        text: 'Items'
+      });
 
-        return (
-            <div className='profile'>
-              <DHLayout className={classes.root}>
-                <Container fluid style={{ lineHeight: '32px' }}>
-                  <Row>
-                    <Col xl={2}>
-                      {/*start of card*/}
-                      <div className="card card-shaped block trailer-1">
-                         <figure className="card-image-wrap">
-                           <img src={thumbnail} alt={info.fullName} className="card-image" style={{borderRadius: '50%'}} />
-                         </figure>
-                         <div className="card-content">
-                           <p style={{textAlign: 'center'}}>
-                             <b>{info.fullName}</b>
-                           </p>
-                           <p className="font-size--1 card-last" style={{textAlign: 'center'}}>
-                             Estimated <b>{getNodesInfo(content.items).estimatedCredit}</b> credits/month
-                           </p>
-                           <nav className="leader-1">
-                             <mark className="label label-blue" style={{marginRight: '5px'}}><b>{content.total} items</b></mark>
-                             <mark className="label label-yellow"><b>{Math.round(info.storageUsage/1e+9)} GB</b></mark>
-                          </nav>
-                        </div>
-                      </div>
-                      {/*end of card*/}
-                      {/*start of filter*/}
-                      {!isReviewing ?
-                        <Fragment>
-                          <Filter data={getFilterData('filterSize')} callbacks={{onChange: this.handleFilter.bind(this)}}></Filter>
-                          <Filter data={getFilterData('filterDate')} callbacks={{onChange: this.handleFilter.bind(this)}}></Filter>
-                          <Filter
-                            data={getFilterData('filterType', getTypes(itemsForTypes))}
-                            callbacks={{onChange: this.handleFilter.bind(this)}}>
-                          </Filter>
-                        </Fragment> :
-                      <Fragment />}
-                      {/*end of filter*/}
-                    </Col>
-                    <Col xl={8}>
-                      <MainComponent
-                        className={classes.mainComponentContainer}
-                        component={mainComponent.component}
-                        data={mainComponentSpecs.data}
-                        config={mainComponentSpecs.config}
-                        callbacks={mainComponentSpecs.callbacks}>
-                      </MainComponent>
-                    </Col>
-                    <Col xl={2}>
-                      <nav className="leader-1">
-                        <button aria-label="View your items in tabular" className={(mode === 'table') ? 'btn tooltip' : 'btn btn-clear tooltip'} style={{marginRight: '10px'}} onClick={this.displayTable.bind(this)}>
-                          <Icon>view_list</Icon>
-                        </button>
-                        <button aria-label="View your items in treemap" className={(mode === 'chart') ? 'btn tooltip' : 'btn btn-clear tooltip'} style={{marginRight: '10px'}} onClick={this.displayChart.bind(this)}>
-                          <Icon>view_quilt</Icon>
-                        </button>
+      return (
+        <div className='profile'>
+          <DHLayout className={classes.root}>
+            <Container fluid className='app-body'>
+              <div className='app-container'>
+                <div className='app-block app-left'>
+                  {/*start of card*/}
+                  <div className='profile-card card card-shaped'>
+                    <figure className='card-image-wrap'>
+                      <img
+                        src={thumbnail}
+                        alt={info.fullName}
+                        className='card-image'
+                        style={{ borderRadius: '50%' }}
+                      />
+                    </figure>
+                    <div className='card-content'>
+                      <p style={{ textAlign: 'center' }}>
+                        <b>{info.fullName}</b>
+                      </p>
+                      <p
+                        className='font-size--1 card-last'
+                        style={{ textAlign: 'center' }}
+                      >
+                        Estimated{' '}
+                        <b>{getNodesInfo(content.items).estimatedCredit}</b>{' '}
+                        credits/month
+                      </p>
+                      <nav className='leader-1'>
+                        <mark
+                          className='label label-blue'
+                          style={{ marginRight: '5px' }}
+                        >
+                          <b>{content.total} items</b>
+                        </mark>
+                        <mark className='label label-yellow'>
+                          <b>{Math.round(info.storageUsage / 1e9)} GB</b>
+                        </mark>
                       </nav>
-                      {(mainComponent.component === 'chart') ?
-                        <ItemsLegend
-                          data={unchangedContent}
-                          callbacks={{onClick: this.handleLegendItemClick.bind(this)}}>
-                        </ItemsLegend> :
-                      <Fragment />}
-                      <br />
-                      <Doughnut data={creditDonutData} width={90} height={40} options={getDonutChartOptions()} />
-                      <Doughnut data={sizeDonutData} width={90} height={40} options={getDonutChartOptions()} />
-                      <Doughnut data={itemsDonutData} width={90} height={40} options={getDonutChartOptions()} />
-                      <br />
-                      <button onClick={this.displayReviewSelection.bind(this)} className="btn btn-large btn-green" style={{marginRight: '5px'}}>Review</button>
-                      <button onClick={this.handleFirstTryDelete.bind(this)} className={(nodes.length === 0) ? 'btn btn-large btn-red btn-disabled' : 'btn btn-large btn-red'}>Delete All</button>
-                    </Col>
-                  </Row>
-                </Container>
-
-              </DHLayout>
-              {/*start of modal*/}
-              <FirstTryModal
-                data={nodesInfo}
-                callbacks={ {close: this.handleCloseFirstTryModal, remove: this.handleSecondTryModal} }>
-              </FirstTryModal>
-              <SecondTryModal
-                data={nodesInfo}
-                callbacks={ {close: this.handleCloseSecondTryModal, remove: this.handlePermanentDelete} }>
-              </SecondTryModal>
-              {/*end of filter*/}
-            </div>
-        );
-      }
+                    </div>
+                  </div>
+                  {/*end of card*/}
+                  {/*start of filter*/}
+                  {!isReviewing ? (
+                    <Fragment>
+                      <Filter
+                        data={getFilterData('filterSize')}
+                        callbacks={{ onChange: this.handleFilter.bind(this) }}
+                      />
+                      <Filter
+                        data={getFilterData('filterDate')}
+                        callbacks={{ onChange: this.handleFilter.bind(this) }}
+                      />
+                      <Filter
+                        data={getFilterData(
+                          'filterType',
+                          getTypes(itemsForTypes)
+                        )}
+                        callbacks={{ onChange: this.handleFilter.bind(this) }}
+                      />
+                    </Fragment>
+                  ) : (
+                    <Fragment />
+                  )}
+                  {/*end of filter*/}
+                </div>
+                <div className='app-block app-center'>
+                  <MainComponent
+                    className={classes.mainComponentContainer}
+                    component={mainComponent.component}
+                    data={mainComponentSpecs.data}
+                    config={mainComponentSpecs.config}
+                    callbacks={mainComponentSpecs.callbacks}
+                  />
+                </div>
+                <div className='app-block app-right'>
+                  <nav className='toggle-list'>
+                    <button
+                      aria-label='View your items in tabular'
+                      className={
+                        mode === 'table'
+                          ? 'btn btn-with-icon'
+                          : 'btn btn-clear btn-with-icon'
+                      }
+                      onClick={this.displayTable.bind(this)}
+                    >
+                      <Icon>view_list</Icon>
+                    </button>
+                    <button
+                      aria-label='View your items in treemap'
+                      className={
+                        mode === 'chart'
+                          ? 'btn btn-with-icon'
+                          : 'btn btn-clear btn-with-icon'
+                      }
+                      style={{ marginRight: '10px' }}
+                      onClick={this.displayChart.bind(this)}
+                    >
+                      <Icon>view_quilt</Icon>
+                    </button>
+                  </nav>
+                  {mainComponent.component === 'chart' ? (
+                    <ItemsLegend
+                      data={unchangedContent}
+                      callbacks={{
+                        onClick: this.handleLegendItemClick.bind(this)
+                      }}
+                    />
+                  ) : (
+                    <Fragment />
+                  )}
+                  <div className='doughnut-list'>
+                    <Doughnut
+                      data={creditDonutData}
+                      width={90}
+                      height={40}
+                      options={getDonutChartOptions()}
+                    />
+                    <Doughnut
+                      data={sizeDonutData}
+                      width={90}
+                      height={40}
+                      options={getDonutChartOptions()}
+                    />
+                    <Doughnut
+                      data={itemsDonutData}
+                      width={90}
+                      height={40}
+                      options={getDonutChartOptions()}
+                    />
+                  </div>
+                  <div className='control-list'>
+                    <button
+                      onClick={this.displayReviewSelection.bind(this)}
+                      className='btn btn-large btn-green'
+                      style={{ marginRight: '5px' }}
+                    >
+                      Review
+                    </button>
+                    <button
+                      onClick={this.handleFirstTryDelete.bind(this)}
+                      className={
+                        nodes.length === 0
+                          ? 'btn btn-large btn-red btn-disabled'
+                          : 'btn btn-large btn-red'
+                      }
+                    >
+                      Delete All
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </DHLayout>
+          {/*start of modal*/}
+          <FirstTryModal
+            data={nodesInfo}
+            callbacks={{
+              close: this.handleCloseFirstTryModal,
+              remove: this.handleSecondTryModal
+            }}
+          />
+          <SecondTryModal
+            data={nodesInfo}
+            callbacks={{
+              close: this.handleCloseSecondTryModal,
+              remove: this.handlePermanentDelete
+            }}
+          />
+          {/*end of filter*/}
+        </div>
+      );
+    }
   }
-
 }
 
 const profileStateToProps = state => {
@@ -419,7 +533,7 @@ const actions = {
 };
 
 Profile.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default connect(

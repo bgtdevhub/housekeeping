@@ -1,4 +1,43 @@
-$image-path: './img'   !default;
+$image-path: './img' !default;
 $font-path: './fonts' !default;
 $default-column-count: 12;
-@import "node_modules/calcite-web/dist/sass/calcite-web";
+@import 'node_modules/calcite-web/dist/sass/calcite-web';
+
+html {
+  box-sizing: border-box;
+}
+
+* {
+  &,
+  &:before,
+  &:after {
+    box-sizing: inherit;
+  }
+}
+
+.app-logo {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.app-body {
+  min-height: calc(100vh - 48px);
+  padding-top: 40px;
+}
+
+.app-container {
+  display: flex;
+  flex-grow: 1;
+  padding: 0 40px;
+  margin: 0 -15px;
+}
+
+.app-block + .app-block {
+  margin-left: 40px;
+}
+
+.app-center {
+  flex: 1;
+}

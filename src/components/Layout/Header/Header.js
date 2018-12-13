@@ -1,13 +1,13 @@
 import React from 'react';
-// import headerStyles from './Header.css';
+import './Header.css';
 
 const Header = props => {
   const { classes } = props;
   return (
-    <div className='panel panel-dark-blue'>
-      <h4 className='' style={{ margin: 0 }}>
+    <div className='header'>
+      <h1 className='app-logo' style={{ margin: 0 }}>
         Housekeeping
-      </h4>
+      </h1>
     </div>
   );
 };
