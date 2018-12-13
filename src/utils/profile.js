@@ -48,7 +48,7 @@ const filters = {
   }
 };
 
-function getDaysBetween( date1, date2 ) {
+export function getDaysBetween( date1, date2 ) {
     //Get 1 day in milliseconds
     var one_day=1000*60*60*24;
 

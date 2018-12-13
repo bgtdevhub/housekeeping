@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Ydnlu from '../../../utils/ydnlu';
 import { getTreemapData, getContrastCalciteColorByIndex } from '../../../utils/chart';
+import Button from 'calcite-react/Button';
 
 class ItemsLegend extends Component {
   state = {
@@ -21,11 +22,12 @@ class ItemsLegend extends Component {
           }}>
           {chartData.children[0].children.map((item, idx) => {
             return <li key={item.name}>
-                <button onClick={(event) => callbacks.onClick(item, event)}
-                  className="btn btn-small"
-                  style={{backgroundColor: getContrastCalciteColorByIndex(idx), border: '2px solid #595959'}}>
+                <Button aria-label={item.name} onClick={(event) => callbacks.onClick(item, event)}
+                  onBlur={()=>console.log('test')}
+                  small
+                  style={{backgroundColor: getContrastCalciteColorByIndex(idx), border: '1px solid #fff'}}>
                   {item.name} ({item.totalSizeDisplay})
-                </button>
+                </Button>
               </li>
           }
         )}

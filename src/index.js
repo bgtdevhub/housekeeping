@@ -12,18 +12,18 @@ import config from 'react-global-configuration';
 
 // Calcite React
 import { ThemeProvider } from 'styled-components';
-// import CalciteTheme from 'calcite-react/theme/CalciteTheme';
 import CalciteThemeProvider from 'calcite-react/CalciteThemeProvider';
+import { ToastContainer } from 'calcite-react/Toaster';
 
 window.configPromise.then(configData => {
   config.set((JSON.parse(configData)));
 
-  console.log('config', config, config.get("id"));
+  // console.log('config', config, config.get("id"));
 
   ReactDOM.render(
     <Provider store={store}>
-      {/*<ThemeProvider theme={CalciteTheme}>*/}
       <CalciteThemeProvider>
+        <ToastContainer />
         <Router>
           <div>
             <Route exact path='/' component={App} />
@@ -31,7 +31,6 @@ window.configPromise.then(configData => {
           </div>
         </Router>
       </CalciteThemeProvider>
-    {/*</ThemeProvider>*/}
     </Provider>,
     document.getElementById('root')
   );

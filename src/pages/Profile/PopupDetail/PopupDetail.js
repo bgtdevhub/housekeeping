@@ -50,7 +50,7 @@ class PopupDetail extends React.Component {
               <h4>{data.title}</h4>
               <p className="font-size--1 trailer-half">{data.snippet}</p>
               <p className="font-size--1 trailer-half">
-                <button onClick={(event)=>this.handleMoreDetailClick(data, event)} className="btn modifier-class">More Details</button>
+                <button style={{display: (data.url) ? 'block' : 'none'}} onClick={(event)=>this.handleMoreDetailClick(data, event)} className="btn modifier-class">More Details</button>
               </p>
             </div>
           </div>

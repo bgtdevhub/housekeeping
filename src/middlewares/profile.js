@@ -17,7 +17,8 @@ import {
   FILTER_BY_DATE_DONE,
   FILTER_BY_TYPE,
   FILTER_BY_TYPE_DONE,
-  ITEM_DELETED
+  ITEM_DELETED,
+  ALL_ITEMS_DELETED
 } from '../constants/actions';
 import { getUsername } from '../utils/auth';
 import { getTreemapData } from '../utils/chart';
@@ -64,7 +65,8 @@ export const profileUser = store => {
                   thumbnail: thumbnail,
                   itemTypes: types,
                   chart,
-                  itemDeleted: false
+                  itemDeleted: false,
+                  allItemsDeleted: false
                 });
               });
             })
@@ -80,7 +82,7 @@ export const profileItemsRemoval = store => {
 
     return next => action => {
         next(action);
-        const { info } = store.getState().profileReducer;
+        const { info, nodes } = store.getState().profileReducer;
         switch (action.type) {
 
           case ADD_REMOVE_BUTTON_TOGGLE:
@@ -93,11 +95,16 @@ export const profileItemsRemoval = store => {
 
           case PERMANENT_REMOVE_ITEM:
             let removedItemPromises = [];
-            action.itemsToBeRemoved.forEach(item => {
+            action.itemsToBeRemoved.forEach((item, idx) => {
+              console.log(idx)
+              if (idx === 0) {
+                store.dispatch({ type: ITEM_DELETED, mode: 'table', itemDeleted: true });
+              }
               removedItemPromises.push(argisApi.deleteItem(getUsername(), item.id));
             });
-            Promise.all([...removedItemPromises]).then(() => {
-              store.dispatch({ type: ITEM_DELETED, mode: 'table', itemDeleted: true, nodes: [] });
+            Promise.all([...removedItemPromises]).then((response) => {
+              console.log('response', response);
+              store.dispatch({ type: ALL_ITEMS_DELETED, mode: 'table', historyNodes: [...nodes], allItemsDeleted: true, nodes: [] });
             });
             break;
 
