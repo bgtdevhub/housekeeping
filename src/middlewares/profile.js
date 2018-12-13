@@ -16,7 +16,8 @@ import {
   FILTER_BY_DATE,
   FILTER_BY_DATE_DONE,
   FILTER_BY_TYPE,
-  FILTER_BY_TYPE_DONE
+  FILTER_BY_TYPE_DONE,
+  ITEM_DELETED
 } from '../constants/actions';
 import { getUsername } from '../utils/auth';
 import { getTreemapData } from '../utils/chart';
@@ -26,46 +27,77 @@ import argisApi from '../services/argis';
 import Ydnlu from '../utils/ydnlu';
 
 export const profileUser = store => {
-  return next => action => {
-    next(action);
-    switch (action.type) {
-      case GET_USER_INFO:
-        argisApi.getUserInfo(getUsername()).then(info => {
-          store.dispatch({ type: GET_USER_INFO_SUCCESS, info: info });
-        });
-        break;
 
-      case GET_USER_INFO_SUCCESS:
-        const getUserThumbnail = argisApi.getUserThumbnail;
-        const username = getUsername();
-        let folderPromises = [];
-        argisApi.getUserContent(getUsername()).then(content => {
-          let thumbnail = getUserThumbnail(username, action.info.thumbnail);
+    return next => action => {
+        next(action);
+        switch (action.type) {
 
-          if (content.folders.length > 0) {
-            let folderIds = content.folders.map(folder => folder.id);
-            folderIds.forEach(id =>
-              folderPromises.push(
-                argisApi.getUserItemsByFolderName(username, id)
-              )
-            );
-          }
+          case GET_USER_INFO:
+            argisApi.getUserInfo(getUsername()).then((info)=> {
+              store.dispatch({ type: GET_USER_INFO_SUCCESS, info: info });
+            })
+            break;
 
-          Promise.all([...folderPromises]).then(res => {
-            let allItems = [...content.items];
-            res.forEach((item, idx) => {
-              allItems = [...allItems, ...item.items];
+          case GET_USER_INFO_SUCCESS:
+            const getUserThumbnail = argisApi.getUserThumbnail;
+            const username = getUsername();
+            let folderPromises = [];
+            argisApi.getUserContent(getUsername()).then((content)=> {
+              let thumbnail = getUserThumbnail(username, action.info.thumbnail);
+
+              if (content.folders.length > 0) {
+                let folderIds = content.folders.map(folder => folder.id);
+                folderIds.forEach(id => folderPromises.push(argisApi.getUserItemsByFolderName(username, id)));
+              }
+
+              Promise.all([...folderPromises]).then(res => {
+                let allItems = [...content.items];
+                res.forEach((item,idx) => {
+                  allItems = [...allItems, ...item.items]
+                });
+                content.items = allItems;
+                const chart = getTreemapData(content);
+                store.dispatch({
+                  type: GET_USER_CONTENT,
+                  content: content,
+                  itemsForTypes: [...content.items],
+                  thumbnail: thumbnail,
+                  itemTypes: types,
+                  chart,
+                  itemDeleted: false
+                });
+              });
+            })
+            break;
+
+          default:
+
+        }
+    }
+}
+
+export const profileItemsRemoval = store => {
+
+    return next => action => {
+        next(action);
+        const { info } = store.getState().profileReducer;
+        switch (action.type) {
+
+          case ADD_REMOVE_BUTTON_TOGGLE:
+            const actions = {
+              remove: SELECT_TO_REMOVE_ITEM,
+              add: ADD_BACK_ITEM
+            };
+            store.dispatch({ type: actions[action.triggerFor], node: action.node });
+            break;
+
+          case PERMANENT_REMOVE_ITEM:
+            let removedItemPromises = [];
+            action.itemsToBeRemoved.forEach(item => {
+              removedItemPromises.push(argisApi.deleteItem(getUsername(), item.id));
             });
-            content.items = allItems;
-            const chart = getTreemapData(content);
-            console.log('perspective', chart);
-            store.dispatch({
-              type: GET_USER_CONTENT,
-              content: content,
-              itemsForTypes: [...content.items],
-              thumbnail: thumbnail,
-              itemTypes: types,
-              chart
+            Promise.all([...removedItemPromises]).then(() => {
+              store.dispatch({ type: ITEM_DELETED, mode: 'table', itemDeleted: true, nodes: [] });
             });
           });
         });

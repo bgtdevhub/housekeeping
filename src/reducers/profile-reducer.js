@@ -14,7 +14,9 @@ import {
   FILTER_ITEMS_DONE,
   FILTER_BY_SIZE_DONE,
   FILTER_BY_DATE_DONE,
-  FILTER_BY_TYPE_DONE
+  FILTER_BY_TYPE_DONE,
+  ITEM_DELETED,
+  ALL_ITEMS_DELETED
 } from '../constants/actions';
 
 const profileReducer = (state = {}, action) => {
@@ -27,6 +29,8 @@ const profileReducer = (state = {}, action) => {
         unchangedContent: {},
         nodes: [],
         isReviewing: false,
+        allItemsDeleted: false,
+        itemDeleteStart: false,
         itemsForTypes: [],
         selectedItem: {},
         filterBySize: false,
@@ -130,6 +134,19 @@ const profileReducer = (state = {}, action) => {
         filterByType: true,
         selectedType: action.selectedType,
         chart: action.chart
+      }
+
+    case ALL_ITEMS_DELETED:
+      return {
+        ...state,
+        allItemsDeleted: true
+      }
+
+    case ITEM_DELETED:
+      return {
+        ...state,
+        itemDeleted: true,
+        nodes: action.nodes
       }
 
     default:

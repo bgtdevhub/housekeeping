@@ -1,6 +1,7 @@
 import {
   GET_USER_INFO,
   GET_USER_CONTENT,
+  GET_USER_INFO_SUCCESS,
   TOGGLE_ICON_CLICK,
   TOGGLE_ICON_CLICK_DONE,
   ADD_REMOVE_BUTTON_TOGGLE,
@@ -16,6 +17,13 @@ import {
 export const getUserInfo = (info) => {
     return {
         type: GET_USER_INFO,
+        info
+    }
+}
+
+export const getUserInfoSuccess = (info) => {
+    return {
+        type: GET_USER_INFO_SUCCESS,
         info
     }
 }

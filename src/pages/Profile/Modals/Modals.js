@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'calcite-react/Button';
 
 export const FirstTryModal = (props) => {
   const { data, callbacks } = props;
@@ -17,8 +18,8 @@ export const FirstTryModal = (props) => {
         </p>
 
         <div className="text-right">
-            <button onClick={callbacks.remove} className="btn js-modal-toggle">Delete</button>
-            <button className="btn btn-clear js-modal-toggle">cancel</button>
+          <Button onClick={callbacks.close} clear style={{marginRight: '5px'}}>Cancel</Button>
+          <Button onClick={callbacks.remove}>Delete</Button>
         </div>
       </div>
     </div>
@@ -40,12 +41,33 @@ export const SecondTryModal = (props) => {
           <b>{data.total}</b> items<br />
           <b>{data.size}</b> MB<br />
           Using <b>{data.estimatedCredit}</b> Credits/Month<br />
-          <b>DELETED</b>
         </p>
 
         <div className="text-right">
-            <button onClick={callbacks.remove} className="btn js-modal-toggle">Okay</button>
+          <Button onClick={callbacks.close} clear style={{marginRight: '5px'}}>Cancel</Button>
+          <Button onClick={callbacks.remove}>Delete</Button>
         </div>
+      </div>
+    </div>
+  )
+};
+
+export const NotificationModal = (props) => {
+  const { data, callbacks } = props;
+  return (
+    <div className="js-modal modal-overlay modifier-class" data-modal="notification">
+      <div className="modal-content column-6" role="dialog" aria-labelledby="modal" role="dialog">
+
+        <a onClick={callbacks.close} className="js-modal-toggle right" href="#" aria-label="close-modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 32 32" className="svg-icon"><path d="M18.404 16l9.9 9.9-2.404 2.404-9.9-9.9-9.9 9.9L3.696 25.9l9.9-9.9-9.9-9.898L6.1 3.698l9.9 9.899 9.9-9.9 2.404 2.406-9.9 9.898z"/></svg>
+        </a>
+
+        <p>
+          <b>{data.total}</b> {data.total > 1 ? 'items' : 'item'}<br />
+          <b>{data.size}</b> MB<br />
+          Using <b>{data.estimatedCredit}</b> Credits/Month<br />
+          <b>DELETED</b>
+        </p>
       </div>
     </div>
   )
