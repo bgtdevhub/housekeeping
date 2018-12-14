@@ -1,13 +1,30 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './App.css';
 import { connect } from 'react-redux';
-import { authStart } from '../../actions/auth';
+import { authStart, logout } from '../../actions/auth';
 import DHLayout from '../../components/Layout/Layout';
 
 class App extends Component {
   state = {
     items: []
   };
+
+  /*
+  * todo: change to redux and use
+  */
+  handleLogout() {
+    alert(134)
+    this.props.logout();
+  }
+
+  static childContextTypes = {
+    logout: PropTypes.object
+  }
+
+  getChildContext() {
+    return {logout:this.handleLogout};
+  }
 
   handleOnlineBtnClick = () => {
     this.props.authStart();
@@ -43,7 +60,7 @@ class App extends Component {
   }
 }
 
-const actions = { authStart };
+const actions = { authStart, logout };
 
 const appStateToProps = state => {
   return {

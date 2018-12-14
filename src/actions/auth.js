@@ -1,4 +1,4 @@
-import { AUTH_START, AUTH_SUCCESS } from '../constants/actions.js';
+import { AUTH_START, AUTH_SUCCESS, LOGOUT } from '../constants/actions.js';
 
 export const authStart = (data) => {
     return {
@@ -10,6 +10,13 @@ export const authStart = (data) => {
 export const authSuccess = (data) => {
     return {
         type: AUTH_SUCCESS,
+        data
+    }
+}
+
+export const logout = (data) => {
+    return {
+        type: LOGOUT,
         data
     }
 }

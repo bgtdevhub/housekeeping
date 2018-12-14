@@ -282,6 +282,7 @@ class Profile extends Component {
       this.props.authSuccess(hash);
     }
     this.props.getUserInfo();
+    this.props.history.push('/profile');
     Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
       draw: function() {
         originalDoughnutDraw.apply(this, arguments);
@@ -302,6 +303,10 @@ class Profile extends Component {
         ctx.fillText(text, textX, textY);
       }
     });
+  }
+
+  componentWillUnmount() {
+    //todo: clear timeouts 
   }
 
   componentDidUpdate(prevProps, prevStates) {
