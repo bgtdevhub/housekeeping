@@ -1,24 +1,40 @@
-.profileLoader {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
+.table-loader {
+  position: relative;
 }
-.profileLoader:after {
-  content: " ";
-  display: block;
-  width: 46px;
-  height: 46px;
-  margin: 1px;
+
+.table-loader:before,
+.table-loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  border: 5px solid #fff;
-  border-color: #000 transparent #000 transparent;
-  animation: profileLoader 1.2s linear infinite;
+  background: #0079c1;
+  animation: tableLoader 1s cubic-bezier(0, 0.84, 1, 0.93) infinite;
+  opacity: 0;
 }
-@keyframes profileLoader {
-  0% {
-    transform: rotate(0deg);
-  }
+
+.table-loader:after {
+  animation-delay: 0.25s;
+}
+
+@keyframes tableLoader {
+  0%,
   100% {
-    transform: rotate(360deg);
+    opacity: 0;
+  }
+
+  0% {
+    transform: translateX(-100px);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transfrom: translateX(100px);
   }
 }

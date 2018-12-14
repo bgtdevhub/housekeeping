@@ -20,10 +20,6 @@
   margin: auto;
 }
 
-.doughnut-list {
-  margin-top: 40px;
-}
-
 .chartjs-render-monitor + .chartjs-render-monitor {
   margin-top: 20px;
 }
@@ -86,4 +82,9 @@
 
 .control-list .btn + .btn {
   margin-top: 10px;
+}
+
+.doughnut-list {
+  width: 135px;
+  margin: auto;
 }

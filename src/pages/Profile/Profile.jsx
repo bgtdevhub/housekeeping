@@ -24,6 +24,8 @@ import {
   filterByType,
   getUserInfoSuccess
 } from '../../actions/profile';
+import { logout } from '../../actions/auth';
+import { getToken } from '../../utils/auth';
 import MainComponent from './MainComponent/MainComponent';
 import DHLayout from '../../components/Layout/Layout';
 import {
@@ -36,6 +38,7 @@ import Loader from './Loader/Loader';
 import Filter from './Filter/Filter';
 import Button from 'calcite-react/Button';
 import Toaster from 'calcite-react/Toaster';
+import Header from '../../components/Layout/Header/Header';
 
 const styles = theme => ({
   root: {
@@ -51,6 +54,11 @@ const styles = theme => ({
 });
 
 class Profile extends Component {
+  static childContextTypes = {
+    callbacks: PropTypes.object,
+    config: PropTypes.object,
+  }
+
   tableConfig = {
     rows: [
       { id: 'type', numeric: false, disablePadding: true, label: '' },
@@ -86,9 +94,21 @@ class Profile extends Component {
       creditSetData: [0, 0],
       sizeSetData: [0, 0],
       itemsSetData: [0, 0],
-      toasterOpen: false,
+      toasterOpen: false
     }
   };
+
+  handleLogout = () => {
+    this.props.history.push('/');
+    this.props.logout();
+  };
+
+  getChildContext() {
+    return {
+      callbacks: { logout: this.handleLogout },
+      config: { show: true }
+    }
+  }
 
   removeItem(node, triggerFor) {
     this.props.addRemoveButtonToggle(node, triggerFor);
@@ -155,7 +175,7 @@ class Profile extends Component {
     this.refreshMainComponent();
     setTimeout(() => {
       this.updateTableState([]);
-      this.props.reviewRemoveSelection()
+      this.props.reviewRemoveSelection();
     }, 1000);
   }
 
@@ -178,7 +198,7 @@ class Profile extends Component {
 
   handleCloseNotification = () => {
     this.props.getUserInfoSuccess(this.state.info);
-    calcite.bus.emit('modal:close', {id: 'notification'});
+    calcite.bus.emit('modal:close', { id: 'notification' });
     this.props.toggleIconClick('table');
     this.showToaster();
     this.refreshMainComponent();
@@ -204,14 +224,14 @@ class Profile extends Component {
     });
   };
 
-  handleLegendItemClick(node, event){
+  handleLegendItemClick(node, event) {
     event.preventDefault();
     this.refreshMainComponent();
     this.props.legendItemClick(node);
     setTimeout(() => {
       this.updateChartState();
-    }, 1000)
-  };
+    }, 1000);
+  }
 
   handleFilter(key, selectedItem) {
     const { mode, content } = this.state;
@@ -232,12 +252,12 @@ class Profile extends Component {
     }
   }
 
-  handleResetChartFilter(node, event){
+  handleResetChartFilter(node, event) {
     event.preventDefault();
     this.props.toggleIconClick('chart');
     this.refreshMainComponent();
     setTimeout(() => this.updateChartState(), 1000);
-  };
+  }
 
   refreshMainComponent = () => {
     this.setState({
@@ -306,24 +326,25 @@ class Profile extends Component {
   }
 
   componentWillUnmount() {
-    //todo: clear timeouts 
+    //todo: clear timeouts
   }
 
   componentDidUpdate(prevProps, prevStates) {
     const { content, mode, itemDeleted, allItemsDeleted } = this.state;
     if (content !== prevStates.content) {
-      if (mode === 'table' ) {
+      if (mode === 'table') {
         this.updateTableState(content.items);
-      } else { // for now is chart
+      } else {
+        // for now is chart
         this.refreshMainComponent();
         setTimeout(() => {
           this.updateChartState();
-        }, 0)
+        }, 0);
       }
     }
 
     if (itemDeleted !== prevStates.itemDeleted && itemDeleted) {
-      calcite.bus.emit('modal:open', {id: 'notification'});
+      calcite.bus.emit('modal:open', { id: 'notification' });
     }
 
     if (allItemsDeleted !== prevStates.allItemsDeleted && allItemsDeleted) {
@@ -350,7 +371,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { content } = this.state;
+    const { content, chart } = this.state;
     const { classes } = this.props;
 
     if (content === undefined) {
@@ -469,6 +490,9 @@ class Profile extends Component {
                   {/*end of filter*/}
                 </div>
                 <div className='app-center'>
+                  {isReviewing ? (
+                    <div className='app-status'>REVIEW</div>
+                  ) : null}
                   <MainComponent
                     className={classes.mainComponentContainer}
                     component={mainComponent.component}
@@ -502,32 +526,41 @@ class Profile extends Component {
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
-                  {(mainComponent.component !== 'table') ?
-                    <ItemsLegend
-                      data={unchangedContent}
-                      callbacks={{
-                        onClick: this.handleLegendItemClick.bind(this),
-                        onBlur: this.handleResetChartFilter.bind(this)
-                      }}>
-                    </ItemsLegend> :
-                  <Fragment />}
+                  <div className='chart-filter-list-container'>
+                    {mainComponent.component !== 'table' ? (
+                      <ItemsLegend
+                        data={unchangedContent}
+                        activeFilter={
+                          !!chart
+                            ? chart.children[0].children.map(x => x.name)
+                            : []
+                        }
+                        callbacks={{
+                          onClick: this.handleLegendItemClick.bind(this),
+                          onBlur: this.handleResetChartFilter.bind(this)
+                        }}
+                      />
+                    ) : (
+                      <Fragment />
+                    )}
+                  </div>
                   <div className='doughnut-list'>
                     <Doughnut
                       data={creditDonutData}
-                      width={75}
-                      height={75}
+                      width={1}
+                      height={1}
                       options={getDonutChartOptions()}
                     />
                     <Doughnut
                       data={sizeDonutData}
-                      width={75}
-                      height={75}
+                      width={1}
+                      height={1}
                       options={getDonutChartOptions()}
                     />
                     <Doughnut
                       data={itemsDonutData}
-                      width={75}
-                      height={75}
+                      width={1}
+                      height={1}
                       options={getDonutChartOptions()}
                     />
                   </div>
@@ -542,7 +575,7 @@ class Profile extends Component {
                         }
                         disabled={nodes.length === 0}
                       >
-                        {(nodes.length > 1 ? 'Delete All' : 'Delete')}
+                        {nodes.length > 1 ? 'Delete All' : 'Delete'}
                       </button>
                       <button
                         onClick={this.displayTable.bind(this)}
@@ -555,7 +588,11 @@ class Profile extends Component {
                     <div className='control-list'>
                       <button
                         disabled={nodes.length < 1}
-                        onClick={this[mode === 'table' ? 'displayReviewFromTableMode' : 'displayReviewFromChartMode'].bind(this)}
+                        onClick={this[
+                          mode === 'table'
+                            ? 'displayReviewFromTableMode'
+                            : 'displayReviewFromChartMode'
+                        ].bind(this)}
                         className='btn btn-fill btn-green'
                       >
                         Review {nodes.length > 0 ? `(${nodes.length})` : ''}
@@ -589,10 +626,9 @@ class Profile extends Component {
             callbacks={{ close: this.handleCloseNotification }}
           />
           {/*end of filter*/}
-          <Toaster
-            open={this.state.toasterOpen}
-            onClose={this.hideToaster}>
-            {historyNodes.length} {historyNodes.length > 0 ? 'items' : 'item'} successful deleted
+          <Toaster open={this.state.toasterOpen} onClose={this.hideToaster}>
+            {historyNodes.length} {historyNodes.length > 0 ? 'items' : 'item'}{' '}
+            successful deleted
           </Toaster>
         </div>
       );
@@ -615,7 +651,7 @@ const profileStateToProps = state => {
     allItemsDeleted: state.profileReducer.allItemsDeleted,
     itemsForTypes: state.profileReducer.itemsForTypes,
     unchangedContent: state.profileReducer.unchangedContent,
-    historyNodes: state.profileReducer.historyNodes,
+    historyNodes: state.profileReducer.historyNodes
   };
 };
 
@@ -631,7 +667,8 @@ const actions = {
   filterBySize,
   filterByDate,
   filterByType,
-  getUserInfoSuccess
+  getUserInfoSuccess,
+  logout
 };
 
 Profile.propTypes = {

@@ -30,7 +30,6 @@ const auth = store => {
             break;
 
           case LOGOUT:
-              debugger;
               localStorage.clear();
               window.location.reload();
             break;

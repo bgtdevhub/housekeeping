@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import mainComponentStyles from './MainComponent.css';
+import './MainComponent.css';
 import Treemap from '../../../components/Chart/Treemap/Treemap';
 import ItemsList from '../ItemsList/ItemsList';
 
 class MainComponent extends Component {
   state = {
     components: {
-        table: ItemsList,
-        chart: Treemap,
-        noop: 'div'
+      table: ItemsList,
+      chart: Treemap,
+      noop: 'div'
     },
     chartData: {}
   };
@@ -16,9 +16,8 @@ class MainComponent extends Component {
   componentDidMount() {
     const { component } = this.props;
     if (component === 'chart') {
-      this.setState({chartData: this.props.data});
+      this.setState({ chartData: this.props.data });
     }
-
   }
 
   render() {
@@ -30,13 +29,11 @@ class MainComponent extends Component {
         <div className={className}>
           <TagName data={data} config={config} callbacks={callbacks} />
         </div>
-      )
+      );
     } else {
-      return (<div className={'profileLoader'}></div>)
+      return <div className='table-loader' />;
     }
-
   }
-
-};
+}
 
 export default MainComponent;
