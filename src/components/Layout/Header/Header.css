@@ -2,8 +2,14 @@
   padding: 0 20px;
   height: 48px;
   border-bottom: 1px solid #efefef;
+  align-items: center;
+  display: flex;
 }
 
 .header .app-logo {
-  line-height: 48px;
+  /* line-height: 48px; */
+}
+
+.logout {
+  margin-left: auto;
 }

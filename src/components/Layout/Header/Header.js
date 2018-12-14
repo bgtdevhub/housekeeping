@@ -5,9 +5,10 @@ const Header = props => {
   const { classes } = props;
   return (
     <div className='header'>
-      <h1 className='app-logo' style={{ margin: 0 }}>
+      <div className='app-logo'>
         Housekeeping
-      </h1>
+      </div>
+      {/*<div className='logout'>Logout</div>*/}
     </div>
   );
 };

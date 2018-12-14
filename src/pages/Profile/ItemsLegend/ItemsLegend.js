@@ -34,6 +34,7 @@ class ItemsLegend extends Component {
                   className='chart-filter-btn'
                   aria-label={item.name}
                   onClick={event => callbacks.onClick(item, event)}
+                  onBlur={event => callbacks.onBlur(item, event)}
                 >
                   <span
                     className='chart-filter-size'
