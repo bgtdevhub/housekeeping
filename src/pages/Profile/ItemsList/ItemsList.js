@@ -264,6 +264,7 @@ class ItemsList extends React.Component {
           component='div'
           count={data.length}
           rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[]}
           page={page}
           backIconButtonProps={{
             'aria-label': 'Previous Page'

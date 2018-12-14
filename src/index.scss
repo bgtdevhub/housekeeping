@@ -7,6 +7,12 @@ $green: #5a9359;
 $red: #de2900;
 $blue: #0079c1;
 
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
 @mixin btn-clear-color($color) {
   border-color: $color;
   color: $color;
@@ -38,6 +44,12 @@ html {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
+
+  &-img {
+    width: 32px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
 }
 
 .app-body {
@@ -63,6 +75,18 @@ html {
 .app-center {
   flex: 1;
   margin: 0 40px;
+  position: relative;
+}
+
+.app-status {
+  position: absolute;
+  font-size: 0.65rem;
+  padding: 0 10px;
+  top: 16px;
+  left: 15px;
+  background: #e4d154;
+  font-weight: bold;
+  animation: blink 0.8s ease infinite;
 }
 
 .btn {

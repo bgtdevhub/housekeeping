@@ -465,6 +465,9 @@ class Profile extends Component {
                   {/*end of filter*/}
                 </div>
                 <div className='app-center'>
+                  {isReviewing ? (
+                    <div className='app-status'>REVIEW</div>
+                  ) : null}
                   <MainComponent
                     className={classes.mainComponentContainer}
                     component={mainComponent.component}
@@ -502,9 +505,11 @@ class Profile extends Component {
                     {mainComponent.component !== 'table' ? (
                       <ItemsLegend
                         data={unchangedContent}
-                        activeFilter={chart.children[0].children.map(
-                          x => x.name
-                        )}
+                        activeFilter={
+                          !!chart
+                            ? chart.children[0].children.map(x => x.name)
+                            : []
+                        }
                         callbacks={{
                           onClick: this.handleLegendItemClick.bind(this),
                           onBlur: this.handleResetChartFilter.bind(this)
