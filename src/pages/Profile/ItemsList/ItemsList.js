@@ -239,7 +239,9 @@ class ItemsList extends React.Component {
                             {n.title}
                           </Typography>
                         </TableCell>
-                        <TableCell numeric>{n.modified}</TableCell>
+                        <TableCell numeric>
+                          {new Date(n.modified).toLocaleDateString()}
+                        </TableCell>
                         <TableCell numeric>
                           {Math.round(n.size / 1e6)} MB
                         </TableCell>

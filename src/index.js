@@ -10,9 +10,6 @@ import store from './store/index';
 
 import config from 'react-global-configuration';
 
-// Calcite React
-import { ThemeProvider } from 'styled-components';
-// import CalciteTheme from 'calcite-react/theme/CalciteTheme';
 import CalciteThemeProvider from 'calcite-react/CalciteThemeProvider';
 
 window.configPromise.then(configData => {

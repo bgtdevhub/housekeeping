@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Profile.css';
 import * as calcite from 'calcite-web';
-import { Container, Row, Col } from 'react-grid-system';
+import { Container } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import { Chart, Doughnut } from 'react-chartjs-2';
@@ -21,11 +21,17 @@ import {
   reviewRemoveSelection,
   filterBySize,
   filterByDate,
-  filterByType
+  filterByType,
+  getUserInfoSuccess
 } from '../../actions/profile';
 import MainComponent from './MainComponent/MainComponent';
 import DHLayout from '../../components/Layout/Layout';
-import { FirstTryModal, SecondTryModal } from './Modals/Modals';
+import {
+  FirstTryModal,
+  SecondTryModal,
+  NotificationModal
+} from './Modals/Modals';
+import ItemsLegend from './ItemsLegend/ItemsLegend';
 import Loader from './Loader/Loader';
 import Filter from './Filter/Filter';
 
@@ -438,6 +444,16 @@ class Profile extends Component {
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
+                  {mainComponent.component === 'chart' ? (
+                    <ItemsLegend
+                      data={unchangedContent}
+                      callbacks={{
+                        onClick: this.handleLegendItemClick.bind(this)
+                      }}
+                    />
+                  ) : (
+                    <Fragment />
+                  )}
                   <div className='doughnut-list'>
                     <Doughnut
                       data={creditDonutData}
