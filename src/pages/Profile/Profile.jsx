@@ -3,11 +3,18 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Profile.css';
 import * as calcite from 'calcite-web';
-import { Container, Row, Col } from 'react-grid-system';
+import noThumbnail from '../../img/icons/ui/nousethumb.gif';
+import { Container } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import { Chart, Doughnut } from 'react-chartjs-2';
-import { getNodesInfo, getFilterData, getTypes, convertToMb, convertMbToB, convertToGb } from '../../utils/profile';
+import {
+  getNodesInfo,
+  getFilterData,
+  getTypes,
+  convertMbToB,
+  convertToGb
+} from '../../utils/profile';
 import Ydnlu from '../../utils/ydnlu';
 import { getDonutChartData, getDonutChartOptions } from '../../utils/chart';
 import { authSuccess } from '../../actions/auth';
@@ -433,7 +440,7 @@ class Profile extends Component {
                   <div className='profile-card card card-shaped'>
                     <figure className='card-image-wrap'>
                       <img
-                        src={thumbnail}
+                        src={thumbnail ? thumbnail : noThumbnail}
                         alt={info.fullName}
                         className='card-image'
                       />
@@ -449,17 +456,21 @@ class Profile extends Component {
                       </p>
                       <div className='info'>
                         <div className='info-item'>
-                          <div className='info-value'>{content.items.length}</div>
+                          <div className='info-value'>
+                            {content.items.length}
+                          </div>
                           <div className='info-unit'>
                             item{content.total > 1 ? 's' : ''}
                           </div>
                         </div>
                         <div className='info-item'>
                           <div className='info-value'>
-                            {( itemsInfo.size >= 100 ? convertToGb(convertMbToB(itemsInfo.size)) : itemsInfo.size )}
+                            {itemsInfo.size >= 100
+                              ? convertToGb(convertMbToB(itemsInfo.size))
+                              : itemsInfo.size}
                           </div>
                           <div className='info-unit'>
-                            {( itemsInfo.size >= 100 ? 'GB' : 'MB' )}
+                            {itemsInfo.size >= 100 ? 'GB' : 'MB'}
                           </div>
                         </div>
                       </div>

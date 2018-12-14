@@ -36,10 +36,6 @@
   margin-top: 10px;
 }
 
-.profile-card .card-image-wrap {
-  height: 175px;
-}
-
 .card-image {
   border-radius: 50%;
   box-shadow: 2px 4px 12px 0 rgba(0, 0, 0, 0.1);
