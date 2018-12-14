@@ -12,7 +12,7 @@ import TableHeader from './TableHeader/TableHeader';
 import PopupDetail from '../PopupDetail/PopupDetail';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
-import { convertToDate, getDaysBetween } from '../../../utils/profile.js';
+import { convertToDate, getDaysBetween, convertToMb, convertToGb } from '../../../utils/profile.js';
 
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -250,7 +250,7 @@ class ItemsList extends React.Component {
                             : 'Today'}
                         </TableCell>
                         <TableCell numeric>
-                          {Math.round(n.size / 1e6)} MB
+                          {convertToMb(n.size) >= 100 ? `${convertToGb(n.size)} GB` : `${convertToMb(n.size)} MB`}
                         </TableCell>
                         <TableCell numeric>{n.numViews}</TableCell>
                       </TableRow>
