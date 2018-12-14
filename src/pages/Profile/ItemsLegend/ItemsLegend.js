@@ -23,7 +23,7 @@ class ItemsLegend extends Component {
           {chartData.children[0].children.map((item, idx) => {
             return <li key={item.name}>
                 <Button aria-label={item.name} onClick={(event) => callbacks.onClick(item, event)}
-                  onBlur={()=>console.log('test')}
+                  onBlur={(event) => callbacks.onBlur(item, event)}
                   small
                   style={{backgroundColor: getContrastCalciteColorByIndex(idx), border: '1px solid #fff'}}>
                   {item.name} ({item.totalSizeDisplay})

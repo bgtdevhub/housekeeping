@@ -220,6 +220,13 @@ class Profile extends Component {
     } else { // for now its table
       this.updateTableState(content.items);
     }
+  }
+
+  handleResetChartFilter(node, event){
+    event.preventDefault();
+    this.props.toggleIconClick('chart');
+    this.refreshMainComponent();
+    setTimeout(() => this.updateChartState(), 1000);
   };
 
   refreshMainComponent = () => {
@@ -406,7 +413,10 @@ class Profile extends Component {
                       {(mainComponent.component !== 'table') ?
                         <ItemsLegend
                           data={unchangedContent}
-                          callbacks={{onClick: this.handleLegendItemClick.bind(this)}}>
+                          callbacks={{
+                            onClick: this.handleLegendItemClick.bind(this),
+                            onBlur: this.handleResetChartFilter.bind(this)
+                          }}>
                         </ItemsLegend> :
                       <Fragment />}
                       <br />
@@ -415,7 +425,7 @@ class Profile extends Component {
                       <Doughnut data={itemsDonutData} width={90} height={40} options={getDonutChartOptions()} />
                       <br />
                       <Button clear={isReviewing} disabled={nodes.length < 1} onClick={this[mode === 'table' ? 'displayReviewFromTableMode' : 'displayReviewFromChartMode'].bind(this)}>
-                        {isReviewing ? (nodes.length > 1 ? 'Delete All' : 'Delete') : 'Review'}
+                        {isReviewing ? (nodes.length > 1 ? 'Delete All' : 'Delete') : 'Review'} {nodes.length > 0 ? `(${nodes.length})` : ''}
                       </Button>
                     </Col>
                   </Row>
