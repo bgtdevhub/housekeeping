@@ -113,12 +113,15 @@ class Profile extends Component {
 
   updateTableState(data) {
     const { itemTypes } = this.state;
+    const { nodes } = this.props;
+    const selected = nodes.map(x => x.id);
     this.setState({
       mainComponent: {
         component: 'table',
         data: data,
         config: Object.assign(Ydnlu.clone(this.tableConfig), {
-          itemTypes: itemTypes
+          itemTypes,
+          selected
         }),
         callbacks: {
           removeItem: this.removeItem.bind(this)
