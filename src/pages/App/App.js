@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './App.css';
 import logo from '../../img/app-logo.png';
+import enterpriseIcon from '../../img/icons/ui/enterprise64.png';
+import onlineIcon from '../../img/icons/ui/online64.png';
 import { connect } from 'react-redux';
 import { authStart } from '../../actions/auth';
 import DHLayout from '../../components/Layout/Layout';
@@ -13,14 +15,14 @@ class App extends Component {
 
   static childContextTypes = {
     callbacks: PropTypes.object,
-    config: PropTypes.object,
-  }
+    config: PropTypes.object
+  };
 
   getChildContext() {
     return {
       callbacks: {},
       config: { show: false }
-    }
+    };
   }
 
   handleOnlineBtnClick = () => {
@@ -46,9 +48,11 @@ class App extends Component {
                   onClick={this.handleOnlineBtnClick}
                   className='btn btn-large login-btn'
                 >
+                  <img src={onlineIcon} />
                   ArcGIS Online
                 </button>
                 <button className='btn btn-large login-btn btn-disabled'>
+                  <img src={enterpriseIcon} />
                   ArcGIS Enterprise
                 </button>
               </div>

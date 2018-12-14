@@ -11,3 +11,11 @@
 .login-btn + .login-btn {
   margin-top: 20px;
 }
+
+.login-btn img {
+  position: relative;
+  top: -2px;
+  width: 32px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
