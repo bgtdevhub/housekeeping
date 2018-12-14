@@ -1,0 +1,28 @@
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.treemap-card {
+  width: 250px;
+  box-shadow: none;
+}
+
+.treemap-image-container {
+  margin: 0;
+}
+
+.treemap-image-container img {
+  width: 100%;
+}
+
+.treemap-card-text {
+  overflow: auto;
+  max-height: 300px;
+}
+
+.treemap [style^='pointer-events: none'] {
+  opacity: 0;
+  animation: fadeIn 0.2s ease 1s forwards;
+}

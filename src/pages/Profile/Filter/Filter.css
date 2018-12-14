@@ -1,0 +1,12 @@
+.app-filter {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.app-filter select {
+  margin-top: 5px;
+}
+
+.app-filter + .app-filter {
+  margin-top: 20px;
+}

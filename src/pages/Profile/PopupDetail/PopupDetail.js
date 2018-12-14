@@ -8,25 +8,34 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     background: '#ffffff',
-    width: 500,
-    border: '1px solid #595959'
+    width: 250,
+    borderRadius: 4
   },
+  image: {
+    width: '100%'
+  },
+  imageContainer: {
+    margin: 0
+  },
+  card: {},
   popper: {
-    zIndex: 1,
-  },
+    zIndex: 1
+  }
 });
 
 class PopupDetail extends React.Component {
   state = {
     open: false,
-    placement: 'bottom',
+    placement: 'bottom'
   };
 
   handleMoreDetailClick(data) {
-    if (data.url) {
-      // window.open(`http://www.arcgis.com/home/webmap/viewer.html?url=${data.url}`, '_blank');
-      window.open(`https://${data.owner}.maps.arcgis.com/home/item.html?id=${data.id}`, '_blank');
-    }
+    if (!data.url) return;
+
+    window.open(
+      `https://${data.owner}.maps.arcgis.com/home/item.html?id=${data.id}`,
+      '_blank'
+    );
   }
 
   render() {
@@ -42,16 +51,25 @@ class PopupDetail extends React.Component {
         className={classes.popper}
       >
         <div className={classes.root} onMouseLeave={callbacks.close}>
-          <div className="card card-wide" style={{boxShadow: 'none'}}>
-            <figure className="card-wide-image-wrap">
-              <img width="250px" src={argisApi.getItemThumbnail(data.id, data.thumbnail)} alt={data.id} />
+          <div className={'card card-wide' + classes.card}>
+            <figure className={classes.imageContainer}>
+              <img
+                className={classes.image}
+                src={argisApi.getItemThumbnail(data.id, data.thumbnail)}
+                alt={data.id}
+              />
             </figure>
-            <div className="card-content">
+            <div className='card-content'>
               <h4>{data.title}</h4>
-              <p className="font-size--1 trailer-half">{data.snippet}</p>
-              <p className="font-size--1 trailer-half">
-                <button style={{display: (data.url) ? 'block' : 'none'}} onClick={(event)=>this.handleMoreDetailClick(data, event)} className="btn modifier-class">More Details</button>
-              </p>
+              <p className='font-size--1 trailer-half'>{data.snippet}</p>
+              {!!data.url ? (
+                <button
+                  onClick={event => this.handleMoreDetailClick(data, event)}
+                  className='btn modifier-class btn-fill'
+                >
+                  More Details
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
@@ -61,7 +79,7 @@ class PopupDetail extends React.Component {
 }
 
 PopupDetail.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(PopupDetail);

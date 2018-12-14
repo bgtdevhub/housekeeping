@@ -1,2 +1,13 @@
-.app {
+.login {
+  height: calc(100vh - 48px);
+  display: flex;
+}
+
+.login .card {
+  margin: auto;
+  transform: translateY(-48px);
+}
+
+.login-btn + .login-btn {
+  margin-top: 20px;
 }

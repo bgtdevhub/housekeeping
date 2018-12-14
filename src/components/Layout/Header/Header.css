@@ -1,0 +1,9 @@
+.header {
+  padding: 0 20px;
+  height: 48px;
+  border-bottom: 1px solid #efefef;
+}
+
+.header .app-logo {
+  line-height: 48px;
+}

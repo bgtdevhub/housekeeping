@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './index.scss';
 import App from './pages/App/App';
-import Profile from './pages/Profile/Profile';
+import Profile from './pages/Profile/Profile.jsx';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store/index';
@@ -16,7 +16,7 @@ import CalciteThemeProvider from 'calcite-react/CalciteThemeProvider';
 import { ToastContainer } from 'calcite-react/Toaster';
 
 window.configPromise.then(configData => {
-  config.set((JSON.parse(configData)));
+  config.set(JSON.parse(configData));
 
   // console.log('config', config, config.get("id"));
 
@@ -34,6 +34,6 @@ window.configPromise.then(configData => {
     </Provider>,
     document.getElementById('root')
   );
-})
+});
 
 serviceWorker.unregister();
