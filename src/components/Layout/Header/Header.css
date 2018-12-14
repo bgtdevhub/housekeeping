@@ -1,11 +1,36 @@
 .header {
   padding: 0 40px;
   height: 48px;
+  line-height: 48px;
   border-bottom: 1px solid #efefef;
-  align-items: center;
   display: flex;
 }
 
 .logout {
   margin-left: auto;
+  position: relative;
+  padding-right: 10px;
+  padding-left: 40px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.logout-icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: calc(50% - 10px);
+  left: 10px;
+  transition: fill 0.2s ease;
+}
+
+.logout:hover {
+  color: #fff;
+  background: #de2900;
+}
+
+.logout:hover .logout-icon {
+  fill: #fff;
 }

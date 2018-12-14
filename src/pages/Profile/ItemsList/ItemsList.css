@@ -1,3 +1,8 @@
+.app-center .item-list-container {
+  border: 1px solid #efefef;
+  box-shadow: none;
+}
+
 .item-list-icon {
   display: block;
   width: 16px;
@@ -20,6 +25,7 @@
 
 .item-list-table th,
 .item-list-table td {
+  border-color: #efefef;
   padding: 0 10px;
 }
 

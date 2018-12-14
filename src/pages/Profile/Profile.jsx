@@ -56,8 +56,8 @@ const styles = theme => ({
 class Profile extends Component {
   static childContextTypes = {
     callbacks: PropTypes.object,
-    config: PropTypes.object,
-  }
+    config: PropTypes.object
+  };
 
   tableConfig = {
     rows: [
@@ -107,7 +107,7 @@ class Profile extends Component {
     return {
       callbacks: { logout: this.handleLogout },
       config: { show: true }
-    }
+    };
   }
 
   removeItem(node, triggerFor) {
@@ -598,11 +598,13 @@ class Profile extends Component {
                         ].bind(this)}
                         className='btn btn-fill btn-green'
                       >
-                        Review {nodes.length > 0 ? `(${nodes.length})` : ''}
+                        Review{' '}
+                        {nodes.length > 0 ? (
+                          <span class='control-list-btn-indicator'>
+                            {nodes.length}
+                          </span>
+                        ) : null}
                       </button>
-                      {/*<Button clear={isReviewing} disabled={nodes.length < 1} onClick={this[mode === 'table' ? 'displayReviewFromTableMode' : 'displayReviewFromChartMode'].bind(this)}>
-                        {isReviewing ? (nodes.length > 1 ? 'Delete All' : 'Delete') : 'Review'} {nodes.length > 0 ? `(${nodes.length})` : ''}
-                      </Button>*/}
                     </div>
                   )}
                 </div>

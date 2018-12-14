@@ -10,17 +10,6 @@ export const FirstTryModal = props => {
       data-modal='firstDeleteConfirmation'
     >
       <div
-        className='modal-content column-4'
-        role='dialog'
-        aria-labelledby='modal'
-        role='dialog'
-      >
-        <div style={{ textAlign: 'center' }}>
-          <div class='deleteLoader' />
-          Cleaning up...
-        </div>
-      </div>
-      <div
         className='modal-content column-6'
         role='dialog'
         aria-labelledby='modal'
@@ -46,14 +35,23 @@ export const FirstTryModal = props => {
         <h3 className='trailer-half'>Are you sure?</h3>
         <p>
           These changes cannot be un-done. You are about to permanently delete
-          <b> {data.total} items</b> from your account
+          <b>
+            {' '}
+            {data.total} item{data.total > 1 ? 's' : ''}
+          </b>{' '}
+          from your account
         </p>
 
         <div className='text-right'>
           <Button onClick={callbacks.close} clear>
             Cancel
           </Button>
-          <Button onClick={callbacks.remove}>Delete</Button>
+          <Button
+            onClick={callbacks.remove}
+            style={{ background: '#de2900', borderColor: '#de2900' }}
+          >
+            Delete
+          </Button>
         </div>
       </div>
     </div>
@@ -104,7 +102,9 @@ export const SecondTryModal = props => {
           <Button onClick={callbacks.close} clear>
             Cancel
           </Button>
-          <Button onClick={callbacks.remove}>Delete</Button>
+          <Button onClick={callbacks.remove} style={{ background: '#de2900' }}>
+            Delete
+          </Button>
         </div>
       </div>
     </div>

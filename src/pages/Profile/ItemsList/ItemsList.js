@@ -155,7 +155,7 @@ class ItemsList extends React.Component {
 
     return (
       <Paper
-        className={classes.root}
+        className={classes.root + ' item-list-container'}
         onMouseLeave={event => this.handlePopoverClose(event)}
       >
         <PopupDetail

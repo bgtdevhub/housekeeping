@@ -84,6 +84,18 @@
   margin-top: 10px;
 }
 
+.control-list-btn-indicator {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+  line-height: 20px;
+  background: #fff;
+  color: #5a9359;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
 .doughnut-list {
   width: 135px;
   margin: auto;

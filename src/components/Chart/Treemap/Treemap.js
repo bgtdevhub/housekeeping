@@ -46,6 +46,7 @@ class DHTreemap extends React.Component {
   };
 
   handleLabelDisplay(node, event) {
+    if (!node) return;
     const { config } = this.props;
 
     if (config.nodes.length > 0) {
@@ -77,7 +78,8 @@ class DHTreemap extends React.Component {
 
   componentDidMount() {
     const { data, config } = this.props;
-    this.setState({ chartData: data, colors: data.colors });
+    const colors = data && data.colors;
+    this.setState({ chartData: data, colors });
   }
 
   render() {
