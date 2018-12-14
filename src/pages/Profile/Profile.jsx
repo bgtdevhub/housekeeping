@@ -293,7 +293,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { content } = this.state;
+    const { content, chart } = this.state;
     const { classes } = this.props;
 
     if (content === undefined) {
@@ -444,33 +444,38 @@ class Profile extends Component {
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
-                  {mainComponent.component === 'chart' ? (
-                    <ItemsLegend
-                      data={unchangedContent}
-                      callbacks={{
-                        onClick: this.handleLegendItemClick.bind(this)
-                      }}
-                    />
-                  ) : (
-                    <Fragment />
-                  )}
+                  <div class='chart-filter-list-container'>
+                    {mainComponent.component === 'chart' ? (
+                      <ItemsLegend
+                        data={unchangedContent}
+                        activeFilter={chart.children[0].children.map(
+                          x => x.name
+                        )}
+                        callbacks={{
+                          onClick: this.handleLegendItemClick.bind(this)
+                        }}
+                      />
+                    ) : (
+                      <Fragment />
+                    )}
+                  </div>
                   <div className='doughnut-list'>
                     <Doughnut
                       data={creditDonutData}
-                      width={75}
-                      height={75}
+                      width={1}
+                      height={1}
                       options={getDonutChartOptions()}
                     />
                     <Doughnut
                       data={sizeDonutData}
-                      width={75}
-                      height={75}
+                      width={1}
+                      height={1}
                       options={getDonutChartOptions()}
                     />
                     <Doughnut
                       data={itemsDonutData}
-                      width={75}
-                      height={75}
+                      width={1}
+                      height={1}
                       options={getDonutChartOptions()}
                     />
                   </div>
