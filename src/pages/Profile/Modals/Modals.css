@@ -1,24 +1,50 @@
-.profileLoader {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
+.modal-content button + button {
+  margin-left: 10px;
 }
-.profileLoader:after {
-  content: " ";
-  display: block;
-  width: 46px;
-  height: 46px;
-  margin: 1px;
-  border-radius: 50%;
-  border: 5px solid #fff;
-  border-color: #000 transparent #000 transparent;
-  animation: profileLoader 1.2s linear infinite;
+
+.deleteLoader {
+  position: relative;
+  height: 100px;
+  width: 200px;
+  margin: auto;
+  transform-style: preserve-3d;
 }
-@keyframes profileLoader {
+
+.deleteLoader:before,
+.deleteLoader:after {
+  content: '';
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  animation: delete 0.8s cubic-bezier(0.63, 0.46, 0.29, 0.81) infinite;
+}
+
+.deleteLoader:before {
+  left: 10px;
+  background: #0079c1;
+}
+
+.deleteLoader:after {
+  top: 5px;
+  left: 0;
+  border: 1px solid #0079c1;
+  animation-delay: 0.2s;
+}
+
+@keyframes delete {
   0% {
-    transform: rotate(0deg);
+    transform: rotateX(10deg) rotateY(30deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
   }
   100% {
-    transform: rotate(360deg);
+    opacity: 0;
+  }
+  80%,
+  100% {
+    transform: translateX(170px) translateY(-5px) scale(0.5);
   }
 }

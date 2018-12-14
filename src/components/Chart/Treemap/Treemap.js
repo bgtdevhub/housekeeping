@@ -39,7 +39,7 @@ class DHTreemap extends React.Component {
         </figure>
         <div className='card-content'>
           <h4>{data.title}</h4>
-          <p class='treemap-card-size'>{Math.round(data.size / 1e6)} MB</p>
+          <p className='treemap-card-size'>{Math.round(data.size / 1e6)} MB</p>
         </div>
       </div>
     );

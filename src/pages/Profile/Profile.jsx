@@ -504,7 +504,7 @@ class Profile extends Component {
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
-                  <div class='chart-filter-list-container'>
+                  <div className='chart-filter-list-container'>
                     {mainComponent.component !== 'table' ? (
                       <ItemsLegend
                         data={unchangedContent}
