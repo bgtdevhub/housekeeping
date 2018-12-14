@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Profile.css';
 import * as calcite from 'calcite-web';
-import { Container } from 'react-grid-system';
+import { Container, Row, Col } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import { Chart, Doughnut } from 'react-chartjs-2';
@@ -34,6 +34,8 @@ import {
 import ItemsLegend from './ItemsLegend/ItemsLegend';
 import Loader from './Loader/Loader';
 import Filter from './Filter/Filter';
+import Button from 'calcite-react/Button';
+import Toaster from 'calcite-react/Toaster';
 
 const styles = theme => ({
   root: {
@@ -83,7 +85,8 @@ class Profile extends Component {
       config: Ydnlu.clone(this.tableConfig),
       creditSetData: [0, 0],
       sizeSetData: [0, 0],
-      itemsSetData: [0, 0]
+      itemsSetData: [0, 0],
+      toasterOpen: false,
     }
   };
 
@@ -137,8 +140,23 @@ class Profile extends Component {
     this.updateTableState(content.items);
   }
 
-  displayReviewSelection() {
-    this.props.reviewRemoveSelection();
+  displayReviewFromTableMode() {
+    const { isReviewing, mode } = this.state;
+    if (isReviewing) {
+      this.handleFirstTryDelete();
+    } else {
+      this.props.reviewRemoveSelection();
+    }
+  }
+
+  displayReviewFromChartMode() {
+    const { nodes, mode } = this.state;
+    this.props.toggleIconClick('table');
+    this.refreshMainComponent();
+    setTimeout(() => {
+      this.updateTableState([]);
+      this.props.reviewRemoveSelection()
+    }, 1000);
   }
 
   handleFirstTryDelete = () => {
@@ -158,6 +176,15 @@ class Profile extends Component {
     calcite.bus.emit('modal:close', { id: 'secondDeleteConfirmation' });
   };
 
+  handleCloseNotification = () => {
+    this.props.getUserInfoSuccess(this.state.info);
+    calcite.bus.emit('modal:close', {id: 'notification'});
+    this.props.toggleIconClick('table');
+    this.showToaster();
+    this.refreshMainComponent();
+    setTimeout(() => this.updateTableState(this.state.content.items), 1000);
+  };
+
   handlePermanentDelete = () => {
     const { nodes } = this.state;
     const hash = this.props.location.hash;
@@ -165,13 +192,26 @@ class Profile extends Component {
     this.props.permanentRemoveItem(nodes, hash);
   };
 
-  handleLegendItemClick(node) {
+  showToaster = () => {
+    this.setState({
+      toasterOpen: true
+    });
+  };
+
+  hideToaster = () => {
+    this.setState({
+      toasterOpen: false
+    });
+  };
+
+  handleLegendItemClick(node, event){
+    event.preventDefault();
     this.refreshMainComponent();
     this.props.legendItemClick(node);
     setTimeout(() => {
       this.updateChartState();
-    }, 0);
-  }
+    }, 1000)
+  };
 
   handleFilter(key, selectedItem) {
     const { mode, content } = this.state;
@@ -191,6 +231,13 @@ class Profile extends Component {
       this.updateTableState(content.items);
     }
   }
+
+  handleResetChartFilter(node, event){
+    event.preventDefault();
+    this.props.toggleIconClick('chart');
+    this.refreshMainComponent();
+    setTimeout(() => this.updateChartState(), 1000);
+  };
 
   refreshMainComponent = () => {
     this.setState({
@@ -258,21 +305,24 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevStates) {
-    const { content, mode, itemDeleted } = this.state;
+    const { content, mode, itemDeleted, allItemsDeleted } = this.state;
     if (content !== prevStates.content) {
-      if (mode === 'table') {
+      if (mode === 'table' ) {
         this.updateTableState(content.items);
-      } else {
-        // for now is chart
+      } else { // for now is chart
         this.refreshMainComponent();
         setTimeout(() => {
           this.updateChartState();
-        }, 0);
+        }, 0)
       }
     }
 
     if (itemDeleted !== prevStates.itemDeleted && itemDeleted) {
-      calcite.bus.emit('modal:open', { id: 'notification' });
+      calcite.bus.emit('modal:open', {id: 'notification'});
+    }
+
+    if (allItemsDeleted !== prevStates.allItemsDeleted && allItemsDeleted) {
+      this.handleCloseNotification();
     }
   }
 
@@ -288,7 +338,9 @@ class Profile extends Component {
       isReviewing: props.isReviewing,
       itemDeleted: props.itemDeleted,
       itemsForTypes: props.itemsForTypes,
-      unchangedContent: props.unchangedContent
+      unchangedContent: props.unchangedContent,
+      allItemsDeleted: props.allItemsDeleted,
+      historyNodes: props.historyNodes
     };
   }
 
@@ -444,16 +496,15 @@ class Profile extends Component {
                       <Icon>view_quilt</Icon>
                     </button>
                   </nav>
-                  {mainComponent.component === 'chart' ? (
+                  {(mainComponent.component !== 'table') ?
                     <ItemsLegend
                       data={unchangedContent}
                       callbacks={{
-                        onClick: this.handleLegendItemClick.bind(this)
-                      }}
-                    />
-                  ) : (
-                    <Fragment />
-                  )}
+                        onClick: this.handleLegendItemClick.bind(this),
+                        onBlur: this.handleResetChartFilter.bind(this)
+                      }}>
+                    </ItemsLegend> :
+                  <Fragment />}
                   <div className='doughnut-list'>
                     <Doughnut
                       data={creditDonutData}
@@ -485,7 +536,7 @@ class Profile extends Component {
                         }
                         disabled={nodes.length === 0}
                       >
-                        Delete All
+                        {(nodes.length > 1 ? 'Delete All' : 'Delete')}
                       </button>
                       <button
                         onClick={this.displayTable.bind(this)}
@@ -497,11 +548,15 @@ class Profile extends Component {
                   ) : (
                     <div className='control-list'>
                       <button
-                        onClick={this.displayReviewSelection.bind(this)}
+                        disabled={nodes.length < 1}
+                        onClick={this[mode === 'table' ? 'displayReviewFromTableMode' : 'displayReviewFromChartMode'].bind(this)}
                         className='btn btn-fill btn-green'
                       >
-                        Review
+                        Review {nodes.length > 0 ? `(${nodes.length})` : ''}
                       </button>
+                      {/*<Button clear={isReviewing} disabled={nodes.length < 1} onClick={this[mode === 'table' ? 'displayReviewFromTableMode' : 'displayReviewFromChartMode'].bind(this)}>
+                        {isReviewing ? (nodes.length > 1 ? 'Delete All' : 'Delete') : 'Review'} {nodes.length > 0 ? `(${nodes.length})` : ''}
+                      </Button>*/}
                     </div>
                   )}
                 </div>
