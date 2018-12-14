@@ -359,7 +359,8 @@ class Profile extends Component {
         unchangedContent,
         nodes,
         itemsForTypes,
-        isReviewing
+        isReviewing,
+        historyNodes
       } = this.state;
       const itemsInfo = getNodesInfo(content.items);
       const nodesInfo = getNodesInfo(nodes);
@@ -583,6 +584,11 @@ class Profile extends Component {
             callbacks={{ close: this.handleCloseNotification }}
           />
           {/*end of filter*/}
+          <Toaster
+            open={this.state.toasterOpen}
+            onClose={this.hideToaster}>
+            {historyNodes.length} {historyNodes.length > 0 ? 'items' : 'item'} successful deleted
+          </Toaster>
         </div>
       );
     }
@@ -603,7 +609,8 @@ const profileStateToProps = state => {
     itemDeleted: state.profileReducer.itemDeleted,
     allItemsDeleted: state.profileReducer.allItemsDeleted,
     itemsForTypes: state.profileReducer.itemsForTypes,
-    unchangedContent: state.profileReducer.unchangedContent
+    unchangedContent: state.profileReducer.unchangedContent,
+    historyNodes: state.profileReducer.historyNodes,
   };
 };
 
