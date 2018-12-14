@@ -30,9 +30,9 @@
 }
 
 .chart-filter-item .chart-filter-btn,
-.chart-filter-btn:hover,
-.chart-filter-btn:focus,
-.chart-filter-btn:active {
+.chart-filter-item .chart-filter-btn:hover,
+.chart-filter-item .chart-filter-btn:focus,
+.chart-filter-item .chart-filter-btn:active {
   background: transparent;
   outline: none;
 }
@@ -41,14 +41,14 @@
   color: #c3c3c3;
 }
 
-.chart-filter-btn:hover,
-.chart-filter-btn:focus,
-.chart-filter-btn:active {
+.chart-filter-item .chart-filter-btn:hover,
+.chart-filter-item .chart-filter-btn:focus,
+.chart-filter-item .chart-filter-btn:active {
   border-color: #d2d2d2;
 }
 
-.chart-filter-btn:focus,
-.chart-filter-btn:active {
+.chart-filter-item .chart-filter-btn:focus,
+.chart-filter-item .chart-filter-btn:active {
   color: #4c4c4c;
 }
 
