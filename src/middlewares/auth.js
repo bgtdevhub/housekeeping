@@ -1,4 +1,4 @@
-import { AUTH_SUCCESS, AUTH_START } from '../constants/actions';
+import { AUTH_SUCCESS, AUTH_START, LOGOUT } from '../constants/actions';
 import { refreshAuth, getAuth } from '../utils/auth';
 import argisApi from '../services/argis';
 import config from 'react-global-configuration';
@@ -27,6 +27,11 @@ const auth = store => {
                   console.log("getAuth--->", getAuth());
                 }
               });
+            break;
+
+          case LOGOUT:
+              localStorage.clear();
+              window.location.reload();
             break;
 
           default:

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './App.css';
 import logo from '../../img/app-logo.png';
 import { connect } from 'react-redux';
@@ -9,6 +10,18 @@ class App extends Component {
   state = {
     items: []
   };
+
+  static childContextTypes = {
+    callbacks: PropTypes.object,
+    config: PropTypes.object,
+  }
+
+  getChildContext() {
+    return {
+      callbacks: {},
+      config: { show: false }
+    }
+  }
 
   handleOnlineBtnClick = () => {
     this.props.authStart();

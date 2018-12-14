@@ -267,6 +267,11 @@ class Profile extends Component {
       const hash = this.props.location.hash;
       this.props.authSuccess(hash);
     }
+
+    if () {
+      this.props.history.push('/');
+    }
+
     this.props.getUserInfo();
     Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
       draw: function() {

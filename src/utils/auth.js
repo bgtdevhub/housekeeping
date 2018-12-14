@@ -11,7 +11,10 @@ export function getToken() {
 
 export function getUsername() {
   const auth = JSON.parse(localStorage.getItem("auth"));
-  return auth.username;
+  if (auth && auth.username) {
+    return auth.username;
+  }
+  return null;
 }
 
 export function setAuth(response) {

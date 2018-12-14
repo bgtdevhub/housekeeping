@@ -88,10 +88,33 @@ class DHTreemap extends React.Component {
         className='treemap'
         style={{ width: '100%', height: window.innerHeight - 150 }}
       >
-        <ResponsiveTreeMapHtml
+        {/*<ResponsiveTreeMapHtml
           root={chartData}
           tooltip={this.handleHovering}
           onClick={this.handleClick}
+          enableLabel={true}
+          identity='name'
+          value='loc'
+          innerPadding={1}
+          outerPadding={1}
+          margin={{
+            top: 0,
+            right: 10,
+            bottom: 0,
+            left: 10
+          }}
+          label={this.handleLabelDisplay.bind(this)}
+          colorBy={this.handleColorBy}
+          animate={true}
+          motionStiffness={90}
+          motionDamping={11}
+          labelSkipSize={32}
+          labelTextColor={this.handleLabelTextColor}
+        />*/}
+
+        <ResponsiveTreeMapHtml
+          root={chartData}
+          tooltip={this.handleHovering}
           enableLabel={true}
           identity='name'
           value='loc'

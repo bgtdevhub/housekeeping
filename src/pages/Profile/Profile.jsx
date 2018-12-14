@@ -24,6 +24,8 @@ import {
   filterByType,
   getUserInfoSuccess
 } from '../../actions/profile';
+import { logout } from '../../actions/auth';
+import { getToken } from '../../utils/auth';
 import MainComponent from './MainComponent/MainComponent';
 import DHLayout from '../../components/Layout/Layout';
 import {
@@ -36,6 +38,7 @@ import Loader from './Loader/Loader';
 import Filter from './Filter/Filter';
 import Button from 'calcite-react/Button';
 import Toaster from 'calcite-react/Toaster';
+import Header from '../../components/Layout/Header/Header';
 
 const styles = theme => ({
   root: {
@@ -51,6 +54,11 @@ const styles = theme => ({
 });
 
 class Profile extends Component {
+  static childContextTypes = {
+    callbacks: PropTypes.object,
+    config: PropTypes.object,
+  }
+
   tableConfig = {
     rows: [
       { id: 'type', numeric: false, disablePadding: true, label: '' },
@@ -89,6 +97,18 @@ class Profile extends Component {
       toasterOpen: false
     }
   };
+
+  handleLogout = () => {
+    this.props.history.push('/');
+    this.props.logout();
+  };
+
+  getChildContext() {
+    return {
+      callbacks: { logout: this.handleLogout },
+      config: { show: true }
+    }
+  }
 
   removeItem(node, triggerFor) {
     this.props.addRemoveButtonToggle(node, triggerFor);
@@ -285,6 +305,7 @@ class Profile extends Component {
       this.props.authSuccess(hash);
     }
     this.props.getUserInfo();
+    this.props.history.push('/profile');
     Chart.helpers.extend(Chart.controllers.doughnut.prototype, {
       draw: function() {
         originalDoughnutDraw.apply(this, arguments);
@@ -305,6 +326,10 @@ class Profile extends Component {
         ctx.fillText(text, textX, textY);
       }
     });
+  }
+
+  componentWillUnmount() {
+    //todo: clear timeouts
   }
 
   componentDidUpdate(prevProps, prevStates) {
@@ -645,7 +670,8 @@ const actions = {
   filterBySize,
   filterByDate,
   filterByType,
-  getUserInfoSuccess
+  getUserInfoSuccess,
+  logout
 };
 
 Profile.propTypes = {

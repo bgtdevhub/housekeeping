@@ -32,9 +32,11 @@ export const profileUser = store => {
     next(action);
     switch (action.type) {
       case GET_USER_INFO:
-        argisApi.getUserInfo(getUsername()).then(info => {
-          store.dispatch({ type: GET_USER_INFO_SUCCESS, info: info });
-        });
+        if (getUsername() !== null) {
+          argisApi.getUserInfo(getUsername()).then(info => {
+            store.dispatch({ type: GET_USER_INFO_SUCCESS, info: info });
+          });
+        }
         break;
 
       case GET_USER_INFO_SUCCESS:
