@@ -17,7 +17,7 @@
   opacity: 0.2;
 }
 
-.chart-filter-btn {
+.chart-filter-item .chart-filter-btn {
   display: flex;
   width: 100%;
   text-align: left;
@@ -29,7 +29,7 @@
   line-height: 38px;
 }
 
-.chart-filter-btn,
+.chart-filter-item .chart-filter-btn,
 .chart-filter-btn:hover,
 .chart-filter-btn:focus,
 .chart-filter-btn:active {
@@ -37,7 +37,7 @@
   outline: none;
 }
 
-.chart-filter-btn:hover {
+.chart-filter-item .chart-filter-btn:hover {
   color: #c3c3c3;
 }
 
