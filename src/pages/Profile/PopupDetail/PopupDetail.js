@@ -62,12 +62,14 @@ class PopupDetail extends React.Component {
             <div className='card-content'>
               <h4>{data.title}</h4>
               <p className='font-size--1 trailer-half'>{data.snippet}</p>
-              <button
-                onClick={event => this.handleMoreDetailClick(data, event)}
-                className='btn modifier-class btn-fill'
-              >
-                More Details
-              </button>
+              {!!data.url ? (
+                <button
+                  onClick={event => this.handleMoreDetailClick(data, event)}
+                  className='btn modifier-class btn-fill'
+                >
+                  More Details
+                </button>
+              ) : null}
             </div>
           </div>
         </div>

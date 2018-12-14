@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import mainComponentStyles from './MainComponent.css';
+import mainComponentStyles from './MainComponent.css';
 import Treemap from '../../../components/Chart/Treemap/Treemap';
 import ItemsList from '../ItemsList/ItemsList';
 
@@ -32,7 +32,7 @@ class MainComponent extends Component {
         </div>
       )
     } else {
-      return (<div>Loading....</div>)
+      return (<div className={'profileLoader'}></div>)
     }
 
   }

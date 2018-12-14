@@ -12,6 +12,7 @@ import TableHeader from './TableHeader/TableHeader';
 import PopupDetail from '../PopupDetail/PopupDetail';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
+import { convertToDate, getDaysBetween } from '../../../utils/profile.js';
 
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -152,8 +153,6 @@ class ItemsList extends React.Component {
     } = this.state;
     const open = Boolean(anchorEl);
 
-    console.log('data', this);
-
     return (
       <Paper
         className={classes.root}
@@ -188,6 +187,10 @@ class ItemsList extends React.Component {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(n => {
                     const isSelected = this.isSelected(n.id);
+                    const lastAccessDayTotal = getDaysBetween(
+                      convertToDate(n.created),
+                      convertToDate(n.modified)
+                    );
 
                     return (
                       <TableRow
@@ -240,7 +243,11 @@ class ItemsList extends React.Component {
                           </Typography>
                         </TableCell>
                         <TableCell numeric>
-                          {new Date(n.modified).toLocaleDateString()}
+                          {lastAccessDayTotal > 0
+                            ? `${lastAccessDayTotal} days`
+                            : lastAccessDayTotal === 1
+                            ? `${lastAccessDayTotal} day`
+                            : 'Today'}
                         </TableCell>
                         <TableCell numeric>
                           {Math.round(n.size / 1e6)} MB

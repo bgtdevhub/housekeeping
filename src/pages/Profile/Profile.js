@@ -31,6 +31,7 @@ import Loader from './Loader/Loader';
 import ItemsLegend from './ItemsLegend/ItemsLegend';
 import Filter from './Filter/Filter';
 import Button from 'calcite-react/Button';
+import Toaster from 'calcite-react/Toaster';
 
 const styles = theme => ({
   root: {
@@ -80,6 +81,7 @@ class Profile extends Component {
       creditSetData: [0, 0],
       sizeSetData: [0, 0],
       itemsSetData: [0, 0],
+      toasterOpen: false,
     }
   }
 
@@ -91,10 +93,6 @@ class Profile extends Component {
         sizeSetData: [0, 0],
         itemsSetData: [0, 0]
       });
-
-      // if (triggerFor === 'add') {
-      //   this.displayReviewSelection();
-      // }
     }, 0)
   };
 
@@ -124,9 +122,7 @@ class Profile extends Component {
 
   displayChart() {
     this.props.toggleIconClick('chart');
-    setTimeout(() => {
-      this.updateChartState();
-    }, 0);
+    setTimeout(() => this.updateChartState(), 0);
   }
 
   displayTable() {
@@ -135,15 +131,23 @@ class Profile extends Component {
     this.updateTableState(content.items);
   }
 
-  displayReviewSelection() {
-    const { isReviewing } = this.state;
-
+  displayReviewFromTableMode() {
+    const { isReviewing, mode } = this.state;
     if (isReviewing) {
       this.handleFirstTryDelete();
     } else {
       this.props.reviewRemoveSelection();
     }
+  }
 
+  displayReviewFromChartMode() {
+    const { nodes, mode } = this.state;
+    this.props.toggleIconClick('table');
+    this.refreshMainComponent();
+    setTimeout(() => {
+      this.updateTableState([]);
+      this.props.reviewRemoveSelection()
+    }, 1000);
   }
 
   handleFirstTryDelete = () => {
@@ -167,8 +171,9 @@ class Profile extends Component {
     this.props.getUserInfoSuccess(this.state.info);
     calcite.bus.emit('modal:close', {id: 'notification'});
     this.props.toggleIconClick('table');
+    this.showToaster();
     this.refreshMainComponent();
-    this.updateTableState(this.state.content.items);
+    setTimeout(() => this.updateTableState(this.state.content.items), 1000);
   };
 
   handlePermanentDelete = () => {
@@ -178,12 +183,25 @@ class Profile extends Component {
     this.props.permanentRemoveItem(nodes, hash);
   };
 
-  handleLegendItemClick(node){
+  showToaster = () => {
+    this.setState({
+      toasterOpen: true
+    });
+  };
+
+  hideToaster = () => {
+    this.setState({
+      toasterOpen: false
+    });
+  };
+
+  handleLegendItemClick(node, event){
+    event.preventDefault();
     this.refreshMainComponent();
     this.props.legendItemClick(node);
     setTimeout(() => {
       this.updateChartState();
-    }, 0)
+    }, 1000)
   };
 
   handleFilter(key, selectedItem) {
@@ -266,7 +284,7 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevStates) {
-    const { content, mode, itemDeleted } = this.state;
+    const { content, mode, itemDeleted, allItemsDeleted } = this.state;
     if (content !== prevStates.content) {
       if (mode === 'table' ) {
         this.updateTableState(content.items);
@@ -280,6 +298,10 @@ class Profile extends Component {
 
     if (itemDeleted !== prevStates.itemDeleted && itemDeleted) {
       calcite.bus.emit('modal:open', {id: 'notification'});
+    }
+
+    if (allItemsDeleted !== prevStates.allItemsDeleted && allItemsDeleted) {
+      this.handleCloseNotification();
     }
   }
 
@@ -295,7 +317,9 @@ class Profile extends Component {
       isReviewing: props.isReviewing,
       itemDeleted: props.itemDeleted,
       itemsForTypes: props.itemsForTypes,
-      unchangedContent: props.unchangedContent
+      unchangedContent: props.unchangedContent,
+      allItemsDeleted: props.allItemsDeleted,
+      historyNodes: props.historyNodes
     };
   }
 
@@ -308,7 +332,7 @@ class Profile extends Component {
           <Loader />
         )
       } else {
-        const { info, mode, thumbnail, mainComponent, unchangedContent, nodes, itemsForTypes, isReviewing } = this.state;
+        const { info, mode, thumbnail, mainComponent, unchangedContent, nodes, historyNodes, itemsForTypes, isReviewing } = this.state;
         const itemsInfo = getNodesInfo(content.items);
         const nodesInfo = getNodesInfo(nodes);
         const mainComponentSpecs = this.getMainComponentSpecs(mainComponent);
@@ -322,8 +346,7 @@ class Profile extends Component {
         const creditDonutData = getDonutChartData({data:[nodesInfo.estimatedCredit, (totalEstimatedCredit === 0) ? 1 : totalEstimatedCredit], total: nodesInfo.estimatedCredit, text: 'Credits'});
         const sizeDonutData = getDonutChartData({data:[nodesInfo.size, (totalEstimatedSize === 0) ? 1 : totalEstimatedSize], total: nodesInfo.size, text: 'MB'});
         const itemsDonutData = getDonutChartData({data:[nodesInfo.total, (totalEstimatedItems === 0) ? 1 : totalEstimatedItems], total: nodesInfo.total, text: 'Items'});
-        console.log('creditDonutData',creditDonutData);
-        console.log('sizeDonutData',sizeDonutData);
+
         return (
             <div className='profile'>
               <DHLayout className={classes.root}>
@@ -380,7 +403,7 @@ class Profile extends Component {
                           <Icon>view_quilt</Icon>
                         </button>
                       </nav>
-                      {(mainComponent.component === 'chart') ?
+                      {(mainComponent.component !== 'table') ?
                         <ItemsLegend
                           data={unchangedContent}
                           callbacks={{onClick: this.handleLegendItemClick.bind(this)}}>
@@ -391,7 +414,7 @@ class Profile extends Component {
                       <Doughnut data={sizeDonutData} width={90} height={40} options={getDonutChartOptions()} />
                       <Doughnut data={itemsDonutData} width={90} height={40} options={getDonutChartOptions()} />
                       <br />
-                      <Button clear={isReviewing} disabled={nodes.length < 1} onClick={this.displayReviewSelection.bind(this)}>
+                      <Button clear={isReviewing} disabled={nodes.length < 1} onClick={this[mode === 'table' ? 'displayReviewFromTableMode' : 'displayReviewFromChartMode'].bind(this)}>
                         {isReviewing ? (nodes.length > 1 ? 'Delete All' : 'Delete') : 'Review'}
                       </Button>
                     </Col>
@@ -412,6 +435,11 @@ class Profile extends Component {
                 data={nodesInfo}
                 callbacks={ {close: this.handleCloseNotification} }>
               </NotificationModal>
+              <Toaster
+                open={this.state.toasterOpen}
+                onClose={this.hideToaster}>
+                {historyNodes.length} {historyNodes.length > 0 ? 'items' : 'item'} successful deleted
+              </Toaster>
               {/*end of modals*/}
             </div>
         );
@@ -434,7 +462,9 @@ const profileStateToProps = state => {
     itemDeleted: state.profileReducer.itemDeleted,
     allItemsDeleted: state.profileReducer.allItemsDeleted,
     itemsForTypes: state.profileReducer.itemsForTypes,
-    unchangedContent: state.profileReducer.unchangedContent
+    unchangedContent: state.profileReducer.unchangedContent,
+    allItemsDeleted: state.profileReducer.allItemsDeleted,
+    historyNodes: state.profileReducer.historyNodes
   };
 };
 

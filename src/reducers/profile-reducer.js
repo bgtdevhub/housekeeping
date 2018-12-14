@@ -28,6 +28,7 @@ const profileReducer = (state = {}, action) => {
         info: action.info,
         unchangedContent: {},
         nodes: [],
+        historyNodes: [],
         isReviewing: false,
         allItemsDeleted: false,
         itemDeleteStart: false,
@@ -139,14 +140,17 @@ const profileReducer = (state = {}, action) => {
     case ALL_ITEMS_DELETED:
       return {
         ...state,
-        allItemsDeleted: true
+        allItemsDeleted: true,
+        nodes: action.nodes,
+        historyNodes: action.historyNodes,
+        mode: action.mode
       }
 
     case ITEM_DELETED:
       return {
         ...state,
         itemDeleted: true,
-        nodes: action.nodes
+        mode: action.mode
       }
 
     default:

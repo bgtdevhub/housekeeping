@@ -82,7 +82,6 @@ class DHTreemap extends React.Component {
 
   componentDidMount() {
     const { data, config } = this.props;
-    console.log('config', config);
     this.setState({ chartData: data, colors: data.colors });
   }
 
