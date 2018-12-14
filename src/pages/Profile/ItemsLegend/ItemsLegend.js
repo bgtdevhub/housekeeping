@@ -15,7 +15,6 @@ class ItemsLegend extends Component {
   render() {
     const { data, /*config,*/ activeFilter, callbacks } = this.props;
     const chartData = getTreemapData(data);
-    console.log('​ItemsLegend -> render -> activeFilter', activeFilter);
 
     if (!Ydnlu.isEmpty(data)) {
       return (
