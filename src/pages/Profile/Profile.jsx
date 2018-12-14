@@ -7,7 +7,7 @@ import { Container, Row, Col } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import { Chart, Doughnut } from 'react-chartjs-2';
-import { getNodesInfo, getFilterData, getTypes } from '../../utils/profile';
+import { getNodesInfo, getFilterData, getTypes, convertToMb, convertMbToB, convertToGb } from '../../utils/profile';
 import Ydnlu from '../../utils/ydnlu';
 import { getDonutChartData, getDonutChartOptions } from '../../utils/chart';
 import { authSuccess } from '../../actions/auth';
@@ -395,10 +395,6 @@ class Profile extends Component {
         itemsInfo.estimatedCredit - nodesInfo.estimatedCredit;
       const totalEstimatedSize = itemsInfo.size - nodesInfo.size;
       const totalEstimatedItems = itemsInfo.total - nodesInfo.total;
-      /*
-       * if total of donut data equal to 0, just for nice displaying, we changed the total to 1
-       * By doing this the chart still show the circle
-       */
       const creditDonutData = getDonutChartData({
         data: [
           nodesInfo.estimatedCredit,
@@ -450,16 +446,18 @@ class Profile extends Component {
                       </p>
                       <div className='info'>
                         <div className='info-item'>
-                          <div className='info-value'>{content.total}</div>
+                          <div className='info-value'>{content.items.length}</div>
                           <div className='info-unit'>
                             item{content.total > 1 ? 's' : ''}
                           </div>
                         </div>
                         <div className='info-item'>
                           <div className='info-value'>
-                            {Math.round(info.storageUsage / 1e9)}
+                            {( itemsInfo.size >= 100 ? convertToGb(convertMbToB(itemsInfo.size)) : itemsInfo.size )}
                           </div>
-                          <div className='info-unit'>GB</div>
+                          <div className='info-unit'>
+                            {( itemsInfo.size >= 100 ? 'GB' : 'MB' )}
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -64,11 +64,13 @@ export function getDaysBetween( date1, date2 ) {
 }
 
 export function convertToMb(value) {
-  return Math.round((value/1e+6));
+  // return Math.round((value/1e+6));
+  return Math.round((value / Math.pow(1024,2)));
 }
 
 export function convertToGb(value) {
-  return Math.round((value/1e+9));
+  // return Math.round((value/1e+9));
+  return Math.round((value/Math.pow(1024,3)));
 }
 
 export function convertMbToB(value) {
@@ -150,7 +152,7 @@ export function getNodesInfo(nodes) {
 
   return {
     total: nodes.length,
-    size: Math.round((size/1e+6)),
+    size: convertToMb(size),
     estimatedCredit: Math.round(estimatedCredit)
   }
 }
