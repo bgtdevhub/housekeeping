@@ -22,7 +22,10 @@ class DHTreemap extends React.Component {
   };
 
   handleColorBy = node => {
-    return this.state.colors[node.type];
+    if (this.state.colors[node.type]) {
+      return this.state.colors[node.type];
+    }
+    return '#fff'; //fallback option to remove warning node.color required
   };
 
   // handleBorderColor = (node) => {
