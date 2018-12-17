@@ -29,4 +29,5 @@
 .treemap [style^='pointer-events: none'] {
   opacity: 0;
   animation: fadeIn 0.2s ease 1s forwards;
+  display: none;
 }
