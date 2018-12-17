@@ -152,7 +152,7 @@ class ItemsList extends React.Component {
       hoverDataCell
     } = this.state;
     const open = Boolean(anchorEl);
-    const now = (new Date).getTime();
+    const now = (new Date()).getTime();
 
     return (
       <Paper
@@ -251,7 +251,7 @@ class ItemsList extends React.Component {
                             : 'Today'}
                         </TableCell>
                         <TableCell numeric>
-                          {convertToMb(n.size) >= 500 ? `${convertToGb(n.size)} GB` : `${convertToMb(n.size)} MB`}
+                          {convertToMb(n.size) >= 500 ? `${(convertToGb(n.size, false)).toFixed(1)} GB` : `${convertToMb(n.size)} MB`}
                         </TableCell>
                         <TableCell numeric>{n.numViews}</TableCell>
                       </TableRow>

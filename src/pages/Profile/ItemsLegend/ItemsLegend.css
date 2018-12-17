@@ -54,7 +54,7 @@
 
 .chart-filter-name {
   flex: 1;
-  max-width: 100%;
+  max-width: 80%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -67,7 +67,7 @@
   height: 20px;
   line-height: 20px;
   font-size: 0.65rem;
-  width: 30px;
+  width: 45px;
   text-align: center;
   color: #fff;
 }

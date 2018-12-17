@@ -15,7 +15,7 @@ const getTotalSizeDisplay = data => {
     let sizes = data.map(item => item.value);
     const totalSize = sizes.reduce((acc, curr) => acc + curr);
     if (totalSize > 500) {
-      return `${convertToGb(convertMbToB(totalSize))} GB`;
+      return `${(convertToGb(convertMbToB(totalSize), false)).toFixed(1)} GB`;
     }
 
     return `${totalSize} MB`;
@@ -99,6 +99,32 @@ export function getTreemapData(data) {
   });
 
   treemapData = treemapData.sort((a, b) => b.totalSize - a.totalSize);
+
+  if (treemapData.length > 5) {
+    let newChildrenArray = [];
+    const otherCategoryArray = treemapData.slice(5);
+    otherCategoryArray.forEach(item => {
+      newChildrenArray.push(item.children);
+    })
+
+    newChildrenArray = newChildrenArray.flat();
+
+    newChildrenArray.forEach(child => {
+      child.type = "Other";
+    })
+
+    const otherCategory = {
+      name: "Other",
+      color: "#fff",
+      children: newChildrenArray,
+      totalSize: getTotalSize(newChildrenArray),
+      totalSizeDisplay: getTotalSizeDisplay(newChildrenArray)
+    }
+
+    treemapData = treemapData.slice(0, 5);
+    treemapData.push(otherCategory);
+  }
+
   treemapData.forEach((data, idx) => {
     data.color = getContrastCalciteColorByIndex(idx);
     colorsMapWithParentNode[data.name] = data.color;

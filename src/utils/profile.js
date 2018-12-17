@@ -26,7 +26,7 @@ const filters = {
         const funcs = {
           day: getDaysBetween
         };
-        const now = convertToDate((new Date).getTime());
+        const now = convertToDate((new Date()).getTime());
         const modifiedDate = convertToDate(item.modified);
         return funcs[selector.format](modifiedDate, now) > selector.value;
       });
@@ -37,7 +37,7 @@ const filters = {
   type: (dataItems, selector) => {
     if (selector.value !== 'all') {
       return dataItems.filter(item => {
-        return item.type == selector.value
+        return item.type === selector.value
       });
     }
 
@@ -71,8 +71,8 @@ export function convertToGb(value, returnRoundNumber = true) {
   return returnRoundNumber ? Math.round((value / Math.pow(1024,3))) : value / Math.pow(1024,3);
 }
 
-export function convertMbToB(value) {
-  return Math.round((value*1e+6));
+export function convertMbToB(value, returnRoundNumber = true) {
+  return returnRoundNumber ? Math.round((value * Math.pow(1024,2))) : value * Math.pow(1024,2);
 }
 
 export function convertToDate(value) {
