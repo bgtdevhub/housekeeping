@@ -26,9 +26,9 @@ const filters = {
         const funcs = {
           day: getDaysBetween
         };
+        const now = convertToDate((new Date).getTime());
         const modifiedDate = convertToDate(item.modified);
-        const createdDate = convertToDate(item.created);
-        return funcs[selector.format](createdDate, modifiedDate) > selector.value;
+        return funcs[selector.format](modifiedDate, now) > selector.value;
       });
     }
 

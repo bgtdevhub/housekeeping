@@ -61,7 +61,7 @@ class Profile extends Component {
       { id: 'type', numeric: false, disablePadding: true, label: '' },
       { id: 'access', numeric: false, disablePadding: true, label: '' },
       { id: 'title', numeric: false, disablePadding: true, label: 'Item Title' },
-      { id: 'modified', numeric: true, disablePadding: false, label: 'Last Accessed' },
+      { id: 'modified', numeric: true, disablePadding: false, label: 'Last Modified' },
       { id: 'size', numeric: true, disablePadding: false, label: 'File Size' },
       { id: 'numViews', numeric: true, disablePadding: false, label: 'Views' },
     ],
@@ -268,7 +268,7 @@ class Profile extends Component {
       this.props.authSuccess(hash);
     }
 
-    if () {
+    if (true) {
       this.props.history.push('/');
     }
 

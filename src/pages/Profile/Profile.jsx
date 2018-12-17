@@ -80,7 +80,7 @@ class Profile extends Component {
         id: 'modified',
         numeric: true,
         disablePadding: false,
-        label: 'Last Accessed'
+        label: 'Last Modified'
       },
       { id: 'size', numeric: true, disablePadding: false, label: 'File Size' },
       { id: 'numViews', numeric: true, disablePadding: false, label: 'Views' }

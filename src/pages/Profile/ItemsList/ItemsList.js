@@ -152,6 +152,7 @@ class ItemsList extends React.Component {
       hoverDataCell
     } = this.state;
     const open = Boolean(anchorEl);
+    const now = (new Date).getTime();
 
     return (
       <Paper
@@ -187,9 +188,9 @@ class ItemsList extends React.Component {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(n => {
                     const isSelected = this.isSelected(n.id);
-                    const lastAccessDayTotal = getDaysBetween(
-                      convertToDate(n.created),
-                      convertToDate(n.modified)
+                    const lastModifiedDayTotal = getDaysBetween(
+                      convertToDate(n.modified),
+                      convertToDate(now)
                     );
 
                     return (
@@ -243,10 +244,10 @@ class ItemsList extends React.Component {
                           </Typography>
                         </TableCell>
                         <TableCell numeric>
-                          {lastAccessDayTotal > 0
-                            ? `${lastAccessDayTotal} days`
-                            : lastAccessDayTotal === 1
-                            ? `${lastAccessDayTotal} day`
+                          {lastModifiedDayTotal > 0
+                            ? `${lastModifiedDayTotal} days`
+                            : lastModifiedDayTotal === 1
+                            ? `${lastModifiedDayTotal} day`
                             : 'Today'}
                         </TableCell>
                         <TableCell numeric>
