@@ -63,14 +63,12 @@ export function getDaysBetween( date1, date2 ) {
     return Math.round(difference_ms/one_day);
 }
 
-export function convertToMb(value) {
-  // return Math.round((value/1e+6));
-  return Math.round((value / Math.pow(1024,2)));
+export function convertToMb(value, returnRoundNumber = true) {
+  return returnRoundNumber ? Math.round((value / Math.pow(1024,2))) : value / Math.pow(1024,2);
 }
 
-export function convertToGb(value) {
-  // return Math.round((value/1e+9));
-  return Math.round((value/Math.pow(1024,3)));
+export function convertToGb(value, returnRoundNumber = true) {
+  return returnRoundNumber ? Math.round((value / Math.pow(1024,3))) : value / Math.pow(1024,3);
 }
 
 export function convertMbToB(value) {
@@ -123,13 +121,13 @@ export function getNodesInfo(nodes) {
       if (hostedNodes.length > 1) {
         const hostedNodeSizes = hostedNodes.map(node => node.size).reduce(reducer);
         //byte to mb
-        hostedNodesEstimatedCredit = ( (convertToMb(hostedNodeSizes) / 10 ) * 2.4 );
+        hostedNodesEstimatedCredit = ( (convertToMb(hostedNodeSizes, false) / 10 ) * 2.4 );
       }
 
       if (nonHostedNodes.length > 1) {
         const nonHostedNodeSizes = nonHostedNodes.map(node => node.size).reduce(reducer);
         //byte to gb
-        nonHostedNodesEstimatedCredit = ( convertToGb(nonHostedNodeSizes) * 1.2 );
+        nonHostedNodesEstimatedCredit = ( convertToGb(nonHostedNodeSizes, false) * 1.2 );
       }
 
       totalEstimatedCredit = (hostedNodesEstimatedCredit + nonHostedNodesEstimatedCredit);

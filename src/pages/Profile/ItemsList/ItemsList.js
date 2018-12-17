@@ -250,7 +250,7 @@ class ItemsList extends React.Component {
                             : 'Today'}
                         </TableCell>
                         <TableCell numeric>
-                          {convertToMb(n.size) >= 100 ? `${convertToGb(n.size)} GB` : `${convertToMb(n.size)} MB`}
+                          {convertToMb(n.size) >= 500 ? `${convertToGb(n.size)} GB` : `${convertToMb(n.size)} MB`}
                         </TableCell>
                         <TableCell numeric>{n.numViews}</TableCell>
                       </TableRow>

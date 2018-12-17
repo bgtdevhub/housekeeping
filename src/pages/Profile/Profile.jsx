@@ -465,12 +465,12 @@ class Profile extends Component {
                         </div>
                         <div className='info-item'>
                           <div className='info-value'>
-                            {itemsInfo.size >= 100
+                            {itemsInfo.size >= 500
                               ? convertToGb(convertMbToB(itemsInfo.size))
                               : itemsInfo.size}
                           </div>
                           <div className='info-unit'>
-                            {itemsInfo.size >= 100 ? 'GB' : 'MB'}
+                            {itemsInfo.size >= 500 ? 'GB' : 'MB'}
                           </div>
                         </div>
                       </div>
