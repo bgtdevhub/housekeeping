@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Profile.css';
 import * as calcite from 'calcite-web';
-import noThumbnail from '../../img/icons/ui/nousethumb.gif';
+import noThumbnail from '../../img/icons/ui/no-user-thumb.jpg';
 import { Container } from 'react-grid-system';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
