@@ -264,9 +264,14 @@ class Profile extends Component {
 
   handleResetChartFilter(node, event) {
     event.preventDefault();
-    this.props.toggleIconClick('chart');
-    this.refreshMainComponent();
-    setTimeout(() => this.updateChartState(), 1000);
+
+    setTimeout(() => {
+      if(this.state.mode === 'chart') {
+        this.props.toggleIconClick('chart');
+        this.refreshMainComponent();
+        setTimeout(() => this.updateChartState(), 200);
+      }
+    }, 150);
   }
 
   refreshMainComponent = () => {
