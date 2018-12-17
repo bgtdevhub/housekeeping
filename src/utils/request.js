@@ -8,7 +8,7 @@ function get(url, parameters, options) {
         xhr.withCredentials = options.withCredentials;
 
         xhr.addEventListener("readystatechange", function() {
-            if (xhr.readyState === 4 && xhr.status == 200) {
+            if (xhr.readyState === 4 && xhr.status === 200) {
                 // Handle empty responses.
                 let response;
                 if (xhr.response === "") {
@@ -19,7 +19,7 @@ function get(url, parameters, options) {
 
                 // Resolve the promise with the response.
                 resolve(response);
-            } else if (xhr.readyState === 4 && xhr.status == 500) {
+            } else if (xhr.readyState === 4 && xhr.status === 500) {
                 reject(Error(xhr));
             }
         });
@@ -53,7 +53,7 @@ function post(url, data, options) {
         xhr.withCredentials = options.withCredentials;
 
         xhr.addEventListener("readystatechange", function() {
-            if (xhr.readyState === 4 && xhr.status == 200) {
+            if (xhr.readyState === 4 && xhr.status === 200) {
                 // Handle empty responses.
                 let response;
                 if (xhr.response === "") {
@@ -64,7 +64,7 @@ function post(url, data, options) {
 
                 // Resolve the promise with the response.
                 resolve(response);
-            } else if (xhr.readyState === 4 && xhr.status == 500) {
+            } else if (xhr.readyState === 4 && xhr.status === 500) {
                 reject(Error(xhr));
             }
         });

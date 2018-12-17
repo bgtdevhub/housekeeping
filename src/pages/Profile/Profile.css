@@ -34,6 +34,7 @@
 
 .profile-card .card-content p + p {
   margin-top: 10px;
+  font-size: 13px;
 }
 
 .card-image {
@@ -65,7 +66,7 @@
 .info-unit {
   height: 20px;
   line-height: 20px;
-  padding: 0 10px;
+  padding: 0 0px;
   font-size: 0.75rem;
   font-weight: bold;
   background: #0079c1;

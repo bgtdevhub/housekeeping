@@ -110,7 +110,7 @@ export function getNodesInfo(nodes) {
   })();
 
   const estimatedCredit = (() => {
-    const hosted = 'Hosted Feature Service';
+    const hosted = 'Feature Service';
     let totalEstimatedCredit = 0;
 
     if (nodes.length > 1) {

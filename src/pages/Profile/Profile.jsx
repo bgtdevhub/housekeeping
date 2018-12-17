@@ -460,7 +460,7 @@ class Profile extends Component {
                             {content.items.length}
                           </div>
                           <div className='info-unit'>
-                            item{content.total > 1 ? 's' : ''}
+                            {content.total > 1 ? 'Items' : 'Item'}
                           </div>
                         </div>
                         <div className='info-item'>
