@@ -403,7 +403,7 @@ class Profile extends Component {
         isReviewing,
         historyNodes
       } = this.state;
-      const itemsInfo = getNodesInfo(content.items);
+      const itemsInfo = getNodesInfo(unchangedContent.items);
       const nodesInfo = getNodesInfo(nodes);
       const mainComponentSpecs = this.getMainComponentSpecs(mainComponent);
       const totalEstimatedCredit =
@@ -456,16 +456,16 @@ class Profile extends Component {
                       </p>
                       <p className='font-size--1 card-last'>
                         Estimated{' '}
-                        <b>{getNodesInfo(content.items).estimatedCredit}</b>{' '}
+                        <b>{getNodesInfo(unchangedContent.items).estimatedCredit}</b>{' '}
                         credits/month
                       </p>
                       <div className='info'>
                         <div className='info-item'>
                           <div className='info-value'>
-                            {content.items.length}
+                            {unchangedContent.items.length}
                           </div>
                           <div className='info-unit'>
-                            {content.total > 1 ? 'Items' : 'Item'}
+                            {unchangedContent.total > 1 ? 'Items' : 'Item'}
                           </div>
                         </div>
                         <div className='info-item'>
