@@ -30,11 +30,12 @@
 
 .profile-card .card-content p {
   margin: 0;
+  text-align: center;
 }
 
 .profile-card .card-content p + p {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .card-image {
