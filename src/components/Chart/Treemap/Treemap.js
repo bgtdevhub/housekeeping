@@ -3,21 +3,29 @@ import './Treemap.css';
 import { ResponsiveTreeMapHtml } from '@nivo/treemap';
 import argisApi from '../../../services/argis';
 import { convertToGb } from '../../../utils/profile';
+import PopupDetail from './PopupDetail/PopupDetail';
 
 class DHTreemap extends React.Component {
   state = {
     chartData: {},
-    colors: {}
+    colors: {},
+    anchorEl: null,
+    hoverDataCell: {},
   };
 
-  handleClick = node => {
-    if (node.data.url) {
-      window.open(node.data.url, '_blank');
-    }
+  handlePopoverClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleClick = (node, event) => {
+    this.setState({ anchorEl: event.currentTarget, hoverDataCell: node.data });
   };
 
   handleColorBy = node => {
-    return this.state.colors[node.type];
+    if (this.state.colors[node.type]) {
+      return this.state.colors[node.type];
+    }
+    return '#fff'; //fallback option to remove warning node.color required
   };
 
   // handleBorderColor = (node) => {
@@ -83,13 +91,19 @@ class DHTreemap extends React.Component {
   }
 
   render() {
-    const { chartData } = this.state;
+    const { chartData, anchorEl, hoverDataCell } = this.state;
+    const open = Boolean(anchorEl);
 
     return (
       <div
         className='treemap'
         style={{ width: '100%', height: window.innerHeight - 150 }}
       >
+        <PopupDetail
+          data={hoverDataCell}
+          config={{ anchorEl: anchorEl, open: open }}
+          callbacks={{ close: this.handlePopoverClose.bind(this) }}
+        />
         {/*<ResponsiveTreeMapHtml
           root={chartData}
           tooltip={this.handleHovering}
@@ -116,7 +130,7 @@ class DHTreemap extends React.Component {
 
         <ResponsiveTreeMapHtml
           root={chartData}
-          tooltip={this.handleHovering}
+          onClick={this.handleClick}
           enableLabel={true}
           identity='name'
           value='loc'
