@@ -4,6 +4,8 @@ import { ResponsiveTreeMapHtml } from '@nivo/treemap';
 import argisApi from '../../../services/argis';
 import { convertToGb } from '../../../utils/profile';
 import PopupDetail from './PopupDetail/PopupDetail';
+import { showChartItemDetail, closeChartItemDetail } from '../../../actions/chart';
+import { connect } from 'react-redux';
 
 class DHTreemap extends React.Component {
   state = {
@@ -15,10 +17,13 @@ class DHTreemap extends React.Component {
 
   handlePopoverClose = () => {
     this.setState({ anchorEl: null });
+    this.props.closeChartItemDetail();
   };
 
   handleClick = (node, event) => {
     this.setState({ anchorEl: event.currentTarget, hoverDataCell: node.data });
+    this.props.showChartItemDetail();
+
   };
 
   handleColorBy = node => {
@@ -155,4 +160,17 @@ class DHTreemap extends React.Component {
   }
 }
 
-export default DHTreemap;
+const stateToProps = state => {
+  return {
+  };
+};
+
+const actions = {
+  showChartItemDetail,
+  closeChartItemDetail
+};
+
+export default connect(
+  stateToProps,
+  actions
+)(DHTreemap);

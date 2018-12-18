@@ -32,6 +32,7 @@ import {
   getUserInfoSuccess
 } from '../../actions/profile';
 import { logout } from '../../actions/auth';
+import { clearChartItemDetailDisplay } from '../../actions/chart';
 import { getToken } from '../../utils/auth';
 import MainComponent from './MainComponent/MainComponent';
 import DHLayout from '../../components/Layout/Layout';
@@ -236,6 +237,7 @@ class Profile extends Component {
 
   handleLegendItemClick(node, event) {
     event.preventDefault();
+    this.props.clearChartItemDetailDisplay();
     this.refreshMainComponent();
     this.props.legendItemClick(node);
     setTimeout(() => {
@@ -266,10 +268,19 @@ class Profile extends Component {
     event.preventDefault();
 
     setTimeout(() => {
-      if(this.state.mode === 'chart') {
-        this.props.toggleIconClick('chart');
-        this.refreshMainComponent();
-        setTimeout(() => this.updateChartState(), 200);
+      if(this.state.mode === 'chart' && !this.props.displayingChartItemDetail) {
+        if (!this.props.closeFromChart) {
+          this.props.toggleIconClick('chart');
+          this.refreshMainComponent();
+          setTimeout(() => this.updateChartState(), 200);
+        } else {
+          this.props.clearChartItemDetailDisplay();
+          const selectedElement = document.getElementById(node.name.split(' ').join('') + "Legend");
+          selectedElement.focus();
+        }
+      } else if (this.state.mode === 'chart' && this.props.displayingChartItemDetail) {
+        const selectedElement = document.getElementById(node.name.split(' ').join('') + "Legend");
+        selectedElement.focus();
       }
     }, 150);
   }
@@ -381,7 +392,9 @@ class Profile extends Component {
       itemsForTypes: props.itemsForTypes,
       unchangedContent: props.unchangedContent,
       allItemsDeleted: props.allItemsDeleted,
-      historyNodes: props.historyNodes
+      historyNodes: props.historyNodes,
+      displayingChartItemDetail: props.displayingChartItemDetail,
+      closeFromChart: props.closeFromChart
     };
   }
 
@@ -670,7 +683,9 @@ const profileStateToProps = state => {
     allItemsDeleted: state.profileReducer.allItemsDeleted,
     itemsForTypes: state.profileReducer.itemsForTypes,
     unchangedContent: state.profileReducer.unchangedContent,
-    historyNodes: state.profileReducer.historyNodes
+    historyNodes: state.profileReducer.historyNodes,
+    displayingChartItemDetail: state.chartReducer.displayingChartItemDetail || false,
+    closeFromChart: state.chartReducer.closeFromChart || false
   };
 };
 
@@ -687,7 +702,8 @@ const actions = {
   filterByDate,
   filterByType,
   getUserInfoSuccess,
-  logout
+  logout,
+  clearChartItemDetailDisplay
 };
 
 Profile.propTypes = {

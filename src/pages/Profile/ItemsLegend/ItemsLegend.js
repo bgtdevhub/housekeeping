@@ -32,6 +32,7 @@ class ItemsLegend extends Component {
                 <Button
                   className='chart-filter-btn'
                   aria-label={item.name}
+                  id={item.name.split(' ').join('') + 'Legend'}
                   onClick={event => callbacks.onClick(item, event)}
                   onBlur={event => callbacks.onBlur(item, event)}
                 >
