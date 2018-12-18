@@ -2,6 +2,7 @@ $image-path: './img' !default;
 $font-path: './fonts' !default;
 $default-column-count: 12;
 @import 'node_modules/calcite-web/dist/sass/calcite-web';
+@import './styles/esri-icons.css';
 
 $green: #5a9359;
 $red: #de2900;
